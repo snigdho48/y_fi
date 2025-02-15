@@ -33,6 +33,7 @@ void onStart(ServiceInstance service) async {
         password: "Your_Password",
         security: NetworkSecurity.WPA,
         withInternet: true,
+        joinOnce: true,
       );
     }
   });
@@ -47,6 +48,7 @@ bool onIosBackground(ServiceInstance service) {
         password: "Your_Password",
         security: NetworkSecurity.WPA,
         withInternet: true,
+        joinOnce: true,
       );
     }
   });

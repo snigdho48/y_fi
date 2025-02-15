@@ -4,7 +4,16 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
-	
+	<key>UIBackgroundModes</key>
+<array>
+    <string>fetch</string>
+    <string>processing</string>
+</array>
+<key>BGTaskSchedulerPermittedIdentifiers</key>
+<array>
+    <string>com.yourcompany.wifiReconnect</string>
+</array>
+
 	<key>CFBundleDisplayName</key>
 	<string>Free Y Fi</string>
 	<key>CFBundleExecutable</key>

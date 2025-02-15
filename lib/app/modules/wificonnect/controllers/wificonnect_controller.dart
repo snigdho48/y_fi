@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:free_y_fi/app/modules/background/workmanager_work.dart';
 import 'package:get/get.dart';
 import 'package:wifi_iot/wifi_iot.dart';
 import 'dart:async';
@@ -7,8 +8,11 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 
 class WificonnectController extends GetxController {
   RxBool isConnected = false.obs;
-  RxInt remainingTime = 60.obs; // Countdown time in seconds
+  RxBool isConnecting = false.obs;
+  RxInt remainingTime = 60.obs; // 10 minutes countdown (600 seconds)
   Timer? disconnectTimer;
+  Timer? connectivityMonitor;
+  RxBool isConnectedViaApp = false.obs;
 
   TextEditingController ssidController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -17,6 +21,7 @@ class WificonnectController extends GetxController {
   void onInit() {
     super.onInit();
     requestPermissions();
+    monitorWiFiStatus();
   }
 
   /// Request necessary permissions for WiFi connection
@@ -27,10 +32,21 @@ class WificonnectController extends GetxController {
     if (!(await Permission.locationWhenInUse.isGranted)) {
       await Permission.locationWhenInUse.request();
     }
+    if (!(await Permission.nearbyWifiDevices.isGranted)) {
+      await Permission.nearbyWifiDevices.request();
+    }
   }
 
-  /// Connect to a Wi-Fi network
-  Future<void> connectToWiFi() async {
+  /// Monitors WiFi status every 10 seconds
+  void monitorWiFiStatus() {
+    connectivityMonitor?.cancel();
+    connectivityMonitor = Timer.periodic(Duration(seconds: 10), (timer) async {
+      bool wifiStatus = await WiFiForIoTPlugin.isConnected() && isConnectedViaApp.value;
+      isConnected.value = wifiStatus;
+    });
+  }
+
+Future<void> connectToWiFi() async {
     String ssid = ssidController.text.trim();
     String password = passwordController.text.trim();
 
@@ -38,6 +54,8 @@ class WificonnectController extends GetxController {
       Get.snackbar("Error", "SSID and Password cannot be empty");
       return;
     }
+
+    isConnecting.value = true;
 
     var isWifiEnabled = await WiFiForIoTPlugin.isEnabled();
     if (!isWifiEnabled) {
@@ -47,8 +65,8 @@ class WificonnectController extends GetxController {
     // Check current connectivity status
     var connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.wifi) {
-      await WiFiForIoTPlugin.disconnect();
-      await Future.delayed(const Duration(seconds: 2)); // Allow time to disconnect
+      await disconnectWiFi();
+      await Future.delayed(Duration(seconds: 2)); // Allow time to disconnect
     }
 
     bool connectionStarted = await WiFiForIoTPlugin.connect(
@@ -59,29 +77,36 @@ class WificonnectController extends GetxController {
       joinOnce: true,
     );
 
-    if (!connectionStarted) {
+    // Schedule Wi-Fi connect task only if the connection started successfully
+    if (connectionStarted) {
+      scheduleWiFiConnectTask(ssid, password);
+    } else {
+      isConnecting.value = false;
       Get.snackbar("Error", "Failed to start WiFi connection.");
       return;
     }
 
-    await Future.delayed(const Duration(seconds: 5)); // Allow time to establish connection
+    await Future.delayed(
+        Duration(seconds: 5)); // Allow time to establish connection
 
     bool isConnectedNow = await WiFiForIoTPlugin.isConnected();
     if (isConnectedNow) {
       isConnected.value = true;
+      isConnectedViaApp.value = true;
+      isConnecting.value = false;
       startDisconnectTimer();
       Get.snackbar("Connected", "Connected to $ssid");
     } else {
+      isConnecting.value = false;
+      isConnectedViaApp.value = false;
       Get.snackbar("Error", "Could not establish WiFi connection.");
     }
   }
-
   /// Start countdown timer for disconnecting Wi-Fi
   void startDisconnectTimer() {
     disconnectTimer?.cancel();
-    remainingTime.value = 60; // Reset timer to 60 seconds
 
-    disconnectTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    disconnectTimer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (remainingTime.value > 0) {
         remainingTime.value--;
       } else {
@@ -95,6 +120,7 @@ class WificonnectController extends GetxController {
   Future<void> disconnectWiFi() async {
     await WiFiForIoTPlugin.disconnect();
     isConnected.value = false;
+    isConnectedViaApp.value = false;
     disconnectTimer?.cancel();
     Get.snackbar("Disconnected", "WiFi disconnected.");
   }
@@ -104,6 +130,7 @@ class WificonnectController extends GetxController {
     ssidController.dispose();
     passwordController.dispose();
     disconnectTimer?.cancel();
+    connectivityMonitor?.cancel();
     super.onClose();
   }
 }

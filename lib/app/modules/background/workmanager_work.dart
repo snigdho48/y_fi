@@ -6,6 +6,7 @@ void scheduleWiFiConnectTask(String ssid, String password) {
     'password': password,
   };
 
+  // Schedule background task
   Workmanager().registerOneOffTask(
     'wifi_connect_task',
     'wifi_connect_task',
