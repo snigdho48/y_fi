@@ -5,14 +5,19 @@ import 'package:wifi_iot/wifi_iot.dart';
 import 'dart:async';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 
 class WificonnectController extends GetxController {
   RxBool isConnected = false.obs;
   RxBool isConnecting = false.obs;
-  RxInt remainingTime = 60.obs; // 10 minutes countdown (600 seconds)
+  RxInt remainingTime = 60.obs; 
   Timer? disconnectTimer;
   Timer? connectivityMonitor;
   RxBool isConnectedViaApp = false.obs;
+  final qrCodeResult = ''.obs;
+  var result = Rxn<Barcode>();
+  QRViewController? controller;
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
   TextEditingController ssidController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -24,29 +29,41 @@ class WificonnectController extends GetxController {
     monitorWiFiStatus();
   }
 
-  /// Request necessary permissions for WiFi connection
-  Future<void> requestPermissions() async {
-    if (!(await Permission.location.isGranted)) {
-      await Permission.location.request();
-    }
-    if (!(await Permission.locationWhenInUse.isGranted)) {
-      await Permission.locationWhenInUse.request();
-    }
-    if (!(await Permission.nearbyWifiDevices.isGranted)) {
-      await Permission.nearbyWifiDevices.request();
+  /// Requests required permissions
+Future<void> requestPermissions() async {
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.location,
+      Permission.bluetooth, // Required for Android 12+
+      Permission.bluetoothScan, // Required for Android 12+
+      Permission.bluetoothConnect, // Required for Android 12+
+      Permission.camera,
+      Permission.nearbyWifiDevices, // Required for Android 13+
+    ].request();
+
+    if (statuses[Permission.bluetooth] == PermissionStatus.permanentlyDenied ||
+        statuses[Permission.bluetoothScan] ==
+            PermissionStatus.permanentlyDenied ||
+        statuses[Permission.bluetoothConnect] ==
+            PermissionStatus.permanentlyDenied) {
+      Get.snackbar(
+          "Permissions Required", "Go to app settings to enable Bluetooth.");
+      openAppSettings();
     }
   }
+
 
   /// Monitors WiFi status every 10 seconds
   void monitorWiFiStatus() {
     connectivityMonitor?.cancel();
     connectivityMonitor = Timer.periodic(Duration(seconds: 10), (timer) async {
-      bool wifiStatus = await WiFiForIoTPlugin.isConnected() && isConnectedViaApp.value;
+      bool wifiStatus =
+          await WiFiForIoTPlugin.isConnected() && isConnectedViaApp.value;
       isConnected.value = wifiStatus;
     });
   }
 
-Future<void> connectToWiFi() async {
+  /// Connects to a Wi-Fi network
+  Future<void> connectToWiFi() async {
     String ssid = ssidController.text.trim();
     String password = passwordController.text.trim();
 
@@ -57,17 +74,19 @@ Future<void> connectToWiFi() async {
 
     isConnecting.value = true;
 
-    var isWifiEnabled = await WiFiForIoTPlugin.isEnabled();
+    bool isWifiEnabled = await WiFiForIoTPlugin.isEnabled();
     if (!isWifiEnabled) {
       await WiFiForIoTPlugin.setEnabled(true);
     }
 
-    // Check current connectivity status
-    var connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.wifi) {
-      await disconnectWiFi();
-      await Future.delayed(Duration(seconds: 2)); // Allow time to disconnect
+  try{
+      await WiFiForIoTPlugin.disconnect();  
+      await Future.delayed(Duration(seconds: 5));
+      print("WiFi disconnected");
+    }catch(e){
+      print("Error disconnecting WiFi: $e");
     }
+    
 
     bool connectionStarted = await WiFiForIoTPlugin.connect(
       ssid,
@@ -77,7 +96,6 @@ Future<void> connectToWiFi() async {
       joinOnce: true,
     );
 
-    // Schedule Wi-Fi connect task only if the connection started successfully
     if (connectionStarted) {
       scheduleWiFiConnectTask(ssid, password);
     } else {
@@ -86,23 +104,25 @@ Future<void> connectToWiFi() async {
       return;
     }
 
-    await Future.delayed(
-        Duration(seconds: 5)); // Allow time to establish connection
-
-    bool isConnectedNow = await WiFiForIoTPlugin.isConnected();
-    if (isConnectedNow) {
-      isConnected.value = true;
-      isConnectedViaApp.value = true;
-      isConnecting.value = false;
-      startDisconnectTimer();
-      Get.snackbar("Connected", "Connected to $ssid");
-    } else {
-      isConnecting.value = false;
-      isConnectedViaApp.value = false;
-      Get.snackbar("Error", "Could not establish WiFi connection.");
+    for (int i = 0; i < 10; i++) {
+      await Future.delayed(Duration(seconds: 1));
+      bool isConnectedNow = await WiFiForIoTPlugin.isConnected();
+      if (isConnectedNow) {
+        isConnected.value = true;
+        isConnectedViaApp.value = true;
+        isConnecting.value = false;
+        startDisconnectTimer();
+        Get.snackbar("Connected", "Connected to $ssid");
+        return;
+      }
     }
+
+    isConnecting.value = false;
+    isConnectedViaApp.value = false;
+    Get.snackbar("Error", "Could not establish WiFi connection.");
   }
-  /// Start countdown timer for disconnecting Wi-Fi
+
+  /// Starts countdown timer for disconnecting WiFi
   void startDisconnectTimer() {
     disconnectTimer?.cancel();
 
@@ -116,13 +136,53 @@ Future<void> connectToWiFi() async {
     });
   }
 
-  /// Disconnect from Wi-Fi network
-  Future<void> disconnectWiFi() async {
-    await WiFiForIoTPlugin.disconnect();
-    isConnected.value = false;
-    isConnectedViaApp.value = false;
-    disconnectTimer?.cancel();
-    Get.snackbar("Disconnected", "WiFi disconnected.");
+  /// Disconnects from Wi-Fi network
+ Future<void> disconnectWiFi() async {
+    try {
+      if (await WiFiForIoTPlugin.isConnected()) {
+        bool isDisconnected = await WiFiForIoTPlugin.disconnect();
+        print("WiFi disconnected: $isDisconnected");
+
+        if (!isDisconnected) {
+          print("Trying alternative disconnect method...");
+          await WiFiForIoTPlugin.disconnect();
+        }
+      }
+
+      isConnected.value = false;
+      isConnectedViaApp.value = false;
+      disconnectTimer?.cancel();
+      controller?.resumeCamera();
+      Get.snackbar("Disconnected", "WiFi disconnected.");
+    } catch (e) {
+      print("Error disconnecting WiFi: $e");
+      Get.snackbar("Error", "Could not disconnect from WiFi.");
+    }
+  }
+
+
+  // QR Code Scanning Functions
+  void startScanning() {
+    qrCodeResult.value = '';
+    controller?.resumeCamera();
+  }
+
+  void stopScanning() {
+    controller?.pauseCamera();
+  }
+
+  void onQRViewCreated(QRViewController qrController) {
+    controller = qrController;
+    qrController.scannedDataStream.listen((scanData) {
+      qrCodeResult.value = scanData.code ?? '';
+      result.value = scanData;
+      if (qrCodeResult.isNotEmpty) {
+
+        ssidController.text = 'A Maze Venture';
+        passwordController.text = 'Amaze@2024#';
+        stopScanning();
+      }
+    });
   }
 
   @override
@@ -131,6 +191,7 @@ Future<void> connectToWiFi() async {
     passwordController.dispose();
     disconnectTimer?.cancel();
     connectivityMonitor?.cancel();
+    controller?.dispose();
     super.onClose();
   }
 }
