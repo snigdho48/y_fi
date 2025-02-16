@@ -33,8 +33,10 @@ void callbackDispatcher() {
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  Workmanager().initialize(callbackDispatcher);
-
+  await Workmanager().initialize(
+    callbackDispatcher, 
+    isInDebugMode: false,
+  );
   runApp(
     GetMaterialApp(
       title: "Application",

@@ -30,7 +30,7 @@ class WificonnectController extends GetxController {
   }
 
   /// Requests required permissions
-Future<void> requestPermissions() async {
+Future<bool> requestPermissions() async {
     Map<Permission, PermissionStatus> statuses = await [
       Permission.location,
       Permission.bluetooth, // Required for Android 12+
@@ -40,15 +40,15 @@ Future<void> requestPermissions() async {
       Permission.nearbyWifiDevices, // Required for Android 13+
     ].request();
 
-    if (statuses[Permission.bluetooth] == PermissionStatus.permanentlyDenied ||
-        statuses[Permission.bluetoothScan] ==
-            PermissionStatus.permanentlyDenied ||
-        statuses[Permission.bluetoothConnect] ==
-            PermissionStatus.permanentlyDenied) {
-      Get.snackbar(
-          "Permissions Required", "Go to app settings to enable Bluetooth.");
-      openAppSettings();
+    bool allGranted = statuses.values.every((status) => status.isGranted);
+
+    if (!allGranted) {
+      print("⚠️ Some permissions were denied: $statuses");
+      return false;
     }
+
+    print("✅ All required permissions granted.");
+    return true;
   }
 
 
@@ -80,9 +80,7 @@ Future<void> requestPermissions() async {
     }
 
   try{
-      await WiFiForIoTPlugin.disconnect();  
-      await Future.delayed(Duration(seconds: 5));
-      print("WiFi disconnected");
+      await disconnectFromWiFi();
     }catch(e){
       print("Error disconnecting WiFi: $e");
     }
@@ -93,11 +91,11 @@ Future<void> requestPermissions() async {
       password: password,
       security: NetworkSecurity.WPA,
       withInternet: true,
-      joinOnce: true,
     );
 
     if (connectionStarted) {
-      scheduleWiFiConnectTask(ssid, password);
+      print("✅ WiFi connection started");
+      // scheduleWiFiConnectTask(ssid, password);
     } else {
       isConnecting.value = false;
       Get.snackbar("Error", "Failed to start WiFi connection.");
@@ -114,12 +112,14 @@ Future<void> requestPermissions() async {
         startDisconnectTimer();
         Get.snackbar("Connected", "Connected to $ssid");
         return;
+      }else{
+          isConnecting.value = false;
+        isConnectedViaApp.value = false;
       }
     }
 
-    isConnecting.value = false;
-    isConnectedViaApp.value = false;
-    Get.snackbar("Error", "Could not establish WiFi connection.");
+  
+   
   }
 
   /// Starts countdown timer for disconnecting WiFi
@@ -135,7 +135,16 @@ Future<void> requestPermissions() async {
       }
     });
   }
+Future<void> disconnectFromWiFi() async {
 
+    bool disconnected = await WiFiForIoTPlugin.disconnect();
+          await Future.delayed(Duration(seconds: 2));
+    if (disconnected) {
+      print("✅ WiFi successfully disconnected");
+    } else {
+      print("❌ Failed to disconnect WiFi");
+    }
+  }
   /// Disconnects from Wi-Fi network
  Future<void> disconnectWiFi() async {
     try {
@@ -169,6 +178,8 @@ Future<void> requestPermissions() async {
 
   void stopScanning() {
     controller?.pauseCamera();
+    controller?.stopCamera();
+    
   }
 
   void onQRViewCreated(QRViewController qrController) {
