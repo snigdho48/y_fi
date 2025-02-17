@@ -132,11 +132,13 @@ class WificonnectView extends GetView<WificonnectController> {
                           ),),
                     );
                   }),
+                  SizedBox(height: 20),
                   Obx(() => Text(
                         controller.isConnected.value
                             ? "Connected! Disconnecting in: ${controller.remainingTime.value}s"
                             : "",
                         style: const TextStyle(
+
                             fontSize: 18, fontWeight: FontWeight.bold),
                       )
                       )

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:free_y_fi/app/modules/notifications/notifications.dart';
 
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 import 'app/routes/app_pages.dart';
 
@@ -16,7 +18,9 @@ void callbackDispatcher() {
     String ssid = inputData?['ssid'] ?? ''; 
     String password =
         inputData?['password'] ?? ''; 
-
+    if (task == 'show_notification') {
+      showNotification("Disconnected", "The app is disconnected.");
+    }
     if (ssid.isNotEmpty && password.isNotEmpty) {
       await WiFiForIoTPlugin.connect(
         ssid,
@@ -36,11 +40,15 @@ void main() async {
     oneRequest.loadingconfig();
 
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+    await GetStorage.init(); 
+
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+    await initializeNotifications();
   await Workmanager().initialize(
     callbackDispatcher, 
     isInDebugMode: false,
   );
+
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp, // Portrait mode up

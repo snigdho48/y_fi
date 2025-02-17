@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:free_y_fi/app/modules/notifications/notifications.dart';
 import 'package:get/get.dart';
 import 'package:wifi_iot/wifi_iot.dart';
 import 'dart:async';
@@ -6,12 +7,14 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 import 'package:one_request/one_request.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get_storage/get_storage.dart';
 
 
 class WificonnectController extends GetxController {
   RxBool isConnected = false.obs;
   RxBool isConnecting = false.obs;
   RxInt remainingTime = 60.obs; 
+  final disconnectTime = 60;
   Timer? disconnectTimer;
   Timer? connectivityMonitor;
   RxBool isConnectedViaApp = false.obs;
@@ -20,6 +23,7 @@ class WificonnectController extends GetxController {
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   final jsonList = List<Map<String, String>>.empty().obs;
+  final localStorage = GetStorage();
   
   TextEditingController ssidController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -51,6 +55,7 @@ Future<bool> requestPermissions() async {
       Permission.bluetoothConnect, // Required for Android 12+
       Permission.camera,
       Permission.nearbyWifiDevices, // Required for Android 13+
+      Permission.notification, // For notification permissions (Android 13+)
     ].request();
 
     bool allGranted = statuses.values.every((status) => status.isGranted);
@@ -128,6 +133,8 @@ Future<bool> isLocationEnabled() async {
       Get.snackbar(backgroundColor: Colors.black.withOpacity(0.5),"Error", "Please enable WiFi",titleText:Text("Error",style: TextStyle(color: Colors.red,fontSize: 18),),messageText: Text("Please enable WiFi",style: TextStyle(color: Colors.red),));
       await WiFiForIoTPlugin.setEnabled(true);
     }
+   print(ssid);
+   print(password);
 
     try {
       await WiFiForIoTPlugin.getSSID()
@@ -155,12 +162,15 @@ Future<bool> isLocationEnabled() async {
       await Future.delayed(Duration(seconds: 1));
       bool isConnectedNow = await WiFiForIoTPlugin.isConnected();
       if (isConnectedNow) {
+        localStorage.write('ssid', ssid);
+        localStorage.write('password', password);
         isConnected.value = true;
         isConnectedViaApp.value = true;
         isConnecting.value = false;
         startDisconnectTimer();
         Get.snackbar(backgroundColor: Colors.black.withOpacity(0.5),"Connected", "Connected to $ssid",titleText: Text("Connected",style: TextStyle(color: Colors.green,fontSize:18),),messageText: Text("Connected to $ssid",style: TextStyle(color: Colors.green),));
         oneRequest.dismissLoading();
+        showNotification("Wi-Fi Connected", "You have been connected to $ssid");
         return;
       } else {
         isConnecting.value = false;
@@ -174,6 +184,8 @@ Future<bool> isLocationEnabled() async {
   /// Starts countdown timer for disconnecting WiFi
   void startDisconnectTimer() {
     disconnectTimer?.cancel();
+        remainingTime.value = disconnectTime;
+
 
     disconnectTimer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (remainingTime.value > 0) {
@@ -205,10 +217,13 @@ Future<void> disconnectFromWiFi() async {
           print("Trying alternative disconnect method...");
           await WiFiForIoTPlugin.disconnect();
         }
-      }
-    
 
-      isConnected.value = false;
+      }
+        showNotification("Wi-Fi Disconnected",
+          "You have been disconnected from the Wi-Fi network.");
+
+
+      isConnecting.value = false;
       isConnectedViaApp.value = false;
       disconnectTimer?.cancel();
       controller?.resumeCamera();
