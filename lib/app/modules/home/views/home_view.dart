@@ -22,7 +22,7 @@ class HomeView extends GetView<HomeController> {
             left: 0,
             child: Container(
               child: Center(
-                child: Text('Ad 1080x200', style: TextStyle(color: Colors.white, fontSize: 20),),
+                child: Text('Ad 1080x200', style: TextStyle(color: Colors.white, fontSize: Get.width*.05),),
               ),
             height: (Get.height *200)/1920,
               width: Get.width,
@@ -39,16 +39,18 @@ class HomeView extends GetView<HomeController> {
                            
                            children: <Widget>[
                 Image.asset('assets/icon/app_logo.png'),
-                SizedBox(height: 20),
-                const Text(
+                SizedBox(height: Get.height * 0.02),
+                 Text(
                   'Free Y-Fi',
-                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.lightGreenAccent),
+                  style: TextStyle(fontSize: Get.width*.1, fontWeight: FontWeight.bold, color: Colors.lightGreenAccent),
                 ),
-                SizedBox(height: 20),
-                Text(
-                  'Connect - Engage - Earn',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal),
-                ),
+                SizedBox(height: Get.height * 0.02),
+               RichText(text: 
+               TextSpan(
+                text: 'Connect - Engage - Earn',
+                style: TextStyle(fontSize: Get.width*.05, color: Colors.white),
+               )
+               ),
                 
                 
                            ],

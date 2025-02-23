@@ -58,9 +58,9 @@ class UserloginView extends GetView<UserloginController> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: Get.height * 0.02),
                     Image.asset('assets/icon/app_logo.png'),
-                    SizedBox(height: Get.height * 0.1),
+                    SizedBox(height: Get.height * 0.07),
                     TextField(
           controller: controller.emailController.value,  // Accessing the value of Rx<TextEditingController>
           decoration: InputDecoration(
@@ -69,14 +69,22 @@ class UserloginView extends GetView<UserloginController> {
             ),
             floatingLabelBehavior: FloatingLabelBehavior.never,
             label: Center(
-              child: Text(
-                'Enter Your Mobile or Email',
-                style: TextStyle(
-                  color: Color(0xFF191B41),
-                  fontSize: 18,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
+              child:RichText(text: 
+                        TextSpan(
+                          
+                          children: [
+                            TextSpan(
+                              text: 'Enter Your Phone or Email',
+                              style: TextStyle(
+                                fontSize: Get.width * 0.04,
+                                fontWeight: FontWeight.normal,
+                                color: Color(0xFF191B41),
+                                height: 1.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                       ),
             ),
             
             labelStyle: TextStyle(
@@ -103,7 +111,7 @@ class UserloginView extends GetView<UserloginController> {
             filled: true,
             fillColor: Colors.white,  // White background
           ),
-        ),SizedBox(height: 20),
+        ),SizedBox(height: Get.height * 0.04),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         spacing: 10,
@@ -122,7 +130,7 @@ class UserloginView extends GetView<UserloginController> {
                             ],
                           ),
                         ),
-          SizedBox(width: Get.width * 0.06),
+          SizedBox(width: Get.width * 0.04),
           Column(
             children: [
               IconButton(
@@ -194,7 +202,7 @@ class UserloginView extends GetView<UserloginController> {
       ),
                   
               
-                    SizedBox(height: 10),
+                    SizedBox(height: Get.height * 0.02),
                 Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       spacing: 5,
@@ -267,6 +275,55 @@ class UserloginView extends GetView<UserloginController> {
                             
                           ),
                         )
+                      ],
+                    ),
+                    SizedBox(height: Get.height * 0.03),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      
+                      children: [
+                        SizedBox(
+                          width: Get.width * 0.37,
+                          height: Get.height * 0.05,
+                          child: ElevatedButton(
+                            onPressed: controller.wificonnect,
+                            
+                            child: Text('User Login', style: TextStyle(fontSize: Get.width*.05,color: Color(0xFF191B41)),),
+                            style: ButtonStyle(
+                              
+                              backgroundColor: MaterialStateProperty.all(
+                                Colors.lightGreenAccent,
+                              ),
+                              shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(40),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                            width: Get.width * 0.37,
+                          height: Get.height * 0.05,
+                          child: ElevatedButton(
+                            onPressed: () {},
+                            child: Text(
+                              'Partner Login',
+                              style: TextStyle(
+                                  fontSize: Get.width*.05, color: Color(0xFF191B41)),
+                            ),
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                Colors.lightGreenAccent,
+                              ),
+                              shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(40),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     )
 

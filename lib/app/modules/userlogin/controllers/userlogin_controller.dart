@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:free_y_fi/app/routes/app_pages.dart';
 import 'package:get/get.dart';
 
 class UserloginController extends GetxController {
@@ -22,5 +23,7 @@ class UserloginController extends GetxController {
     super.onClose();
   }
 
-  void increment() => count.value++;
+  void wificonnect() {
+    Get.offAllNamed(Routes.WIFICONNECT);
+  }
 }
