@@ -49,7 +49,9 @@ void showNotification(String title, String body) async {
     channelDescription: 'Channel for notifications',
     importance: Importance.max,
     priority: Priority.high,
+    icon: '@mipmap/ic_launcher', // Make sure to use the correct icon name
     ticker: 'ticker',
+    enableVibration: true,
   );
   const NotificationDetails platformChannelSpecifics =
       NotificationDetails(android: androidPlatformChannelSpecifics);

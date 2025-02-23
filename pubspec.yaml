@@ -47,6 +47,7 @@ dependencies:
   flutter_local_notifications: ^18.0.1
   get_storage: ^2.1.1
   path_provider: ^2.1.2
+  font_awesome_flutter: ^10.8.0
 
 
 dev_dependencies:
@@ -65,7 +66,9 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
+  assets:
+    - assets/icon/
+    - assets/icon/app_logo.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -108,3 +111,15 @@ flutter_icons:
   image_path: "assets/icon/app_logo.png" # Change this to your logo path
   adaptive_icon_foreground: "assets/icon/app_logo.png"
   adaptive_icon_background: "#ffffff"
+flutter_native_splash:
+  color: "#191B41"
+  background_image: "assets/icon/app_logo.png"
+  image:  "assets/icon/app_logo.png"
+  android: true
+  ios: true
+  android_gravity: "center"
+  ios_content_mode: "scaleToFill"
+  android_12:
+    background_image: "assets/icon/app_logo.png"
+    image:  "assets/icon/app_logo.png"
+    icon_background_color: "#191B41"

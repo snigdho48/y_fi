@@ -107,7 +107,7 @@ class WificonnectView extends GetView<WificonnectController> {
                     }
                     return ElevatedButton(
                       
-                      onPressed: controller.isConnected.value
+                      onPressed: controller.isConnected.value 
                           ? controller.disconnectWiFi2
                           : controller.connectToWiFi,
                           style: ElevatedButton.styleFrom(
@@ -126,7 +126,7 @@ class WificonnectView extends GetView<WificonnectController> {
                             
                           ),
                       child: Text(
-                          controller.isConnected.value ? "Disconnect" : "Connect",style: TextStyle(
+                          controller.isConnected.value  ? "Disconnect" : "Connect",style: TextStyle(
                             color: Colors.black,
                             fontSize: 22,
                           ),),
@@ -134,7 +134,7 @@ class WificonnectView extends GetView<WificonnectController> {
                   }),
                   SizedBox(height: 20),
                   Obx(() => Text(
-                        controller.isConnected.value
+                        controller.isConnected.value 
                             ? "Connected! Disconnecting in: ${controller.remainingTime.value}s"
                             : "",
                         style: const TextStyle(

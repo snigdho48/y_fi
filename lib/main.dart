@@ -42,8 +42,8 @@ void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
     await GetStorage.init(); 
 
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-    await initializeNotifications();
+FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  await initializeNotifications();
   await Workmanager().initialize(
     callbackDispatcher, 
     isInDebugMode: false,
@@ -60,6 +60,41 @@ void main() async {
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
       builder: oneRequest.initLoading,
+      theme: ThemeData(
+        primaryColor: const Color(0xFF191B41),
+        primaryColorDark: const Color(0xFF191B41),
+        primaryColorLight: const Color(0xFF191B41),
+        scaffoldBackgroundColor: const Color(0xFF191B41),
+        textTheme: TextTheme(
+          bodySmall: TextStyle(
+            color: Colors.white,
+          ),
+          bodyMedium: TextStyle(
+            color: Colors.white,
+          ),
+          bodyLarge: TextStyle(
+            color: Colors.white,
+          ),
+          displaySmall: TextStyle(
+            color: Colors.white,
+          ),
+          displayMedium: TextStyle(
+            color: Colors.white,
+          ),
+          displayLarge: TextStyle(
+            color: Colors.white,
+          ),
+
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor:  Color(0xFF191B41),
+          foregroundColor: Colors.white,
+          titleTextStyle: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+
+      ),
 
     ),
   );

@@ -13,7 +13,7 @@ import 'package:get_storage/get_storage.dart';
 class WificonnectController extends GetxController {
   RxBool isConnected = false.obs;
   RxBool isConnecting = false.obs;
-  RxInt remainingTime = 60.obs; 
+  RxInt remainingTime = 0.obs; 
   final disconnectTime = 60;
   Timer? disconnectTimer;
   Timer? connectivityMonitor;
@@ -50,10 +50,8 @@ class WificonnectController extends GetxController {
 Future<bool> requestPermissions() async {
     Map<Permission, PermissionStatus> statuses = await [
       Permission.location,
-      Permission.bluetooth, // Required for Android 12+
-      Permission.bluetoothScan, // Required for Android 12+
-      Permission.bluetoothConnect, // Required for Android 12+
       Permission.camera,
+      Permission.backgroundRefresh,
       Permission.nearbyWifiDevices, // Required for Android 13+
       Permission.notification, // For notification permissions (Android 13+)
     ].request();
@@ -61,7 +59,13 @@ Future<bool> requestPermissions() async {
     bool allGranted = statuses.values.every((status) => status.isGranted);
 
     if (!allGranted) {
-      print("⚠️ Some permissions were denied: $statuses");
+      var notGranted = statuses.entries.where((entry) => entry.value.isDenied);
+      var denied = notGranted.map((e) => e.key).toList();
+      // get denied permissions name
+    
+      Get.snackbar(backgroundColor: Colors.black.withOpacity(0.5),"Permissions Required", "Please grant permission ${denied.map(
+        (e)=>e.toString().split('.').last).join(', '
+      )}.",titleText:Text("Error",style: TextStyle(color: Colors.red,fontSize: 18),),messageText: Text("Please grant all required permissions.",style: TextStyle(color: Colors.red),));
       return false;
     }
 
@@ -91,17 +95,11 @@ Future<bool> isLocationEnabled() async {
 /// Connects to a Wi-Fi network
   Future<void> connectToWiFi() async {
     oneRequest.loading();
-
-    // ✅ Request Permissions First
-    bool hasPermissions = await requestPermissions();
-    if (!hasPermissions) {
-      Get.snackbar(backgroundColor: Colors.black.withOpacity(0.5),"Error", "Required permissions not granted.",titleText:Text("Error",style: TextStyle(color: Colors.red,fontSize: 18),),messageText: Text("Required permissions not granted.",style: TextStyle(color: Colors.red),));
-      return;
-    }
-
+ isConnected.value = false;
+remainingTime.value = disconnectTime;
     // ✅ Ensure Location Services Are Enabled
     if (!await isLocationEnabled()) {
-      oneRequest.dismissLoading();
+      await oneRequest.dismissLoading();
       await Permission.location.request();
       Get.snackbar(backgroundColor: Colors.black.withOpacity(0.5),"Error", "Please enable location services.",titleText:Text("Error",style: TextStyle(color: Colors.red,fontSize: 18),),messageText: Text("Please enable location services.",style: TextStyle(color: Colors.red),));
       return;
@@ -152,39 +150,53 @@ Future<bool> isLocationEnabled() async {
 
     if (connectionStarted) {
       print("✅ WiFi connection started");
+
+        localStorage.write('ssid', ssid);
+        localStorage.write('password', password);
+
+        isConnectedViaApp.value = true;
+        isConnecting.value = false;
+
+        startDisconnectTimer();
+        Get.snackbar(
+            backgroundColor: Colors.black.withOpacity(0.5),
+            "Connected",
+            "Connected to $ssid",
+            titleText: Text(
+              "Connected",
+              style: TextStyle(color: Colors.green, fontSize: 18),
+            ),
+            messageText: Text(
+              "Connected to $ssid",
+              style: TextStyle(color: Colors.green),
+            ));
+               oneRequest.dismissLoading();
+        try {
+          showNotification(
+              "Wi-Fi Connected", "You have been connected to $ssid");
+        } catch (e) {
+          print(e);
+        }
+     
+
     } else {
       isConnecting.value = false;
+      isConnected.value = false;
+      oneRequest.dismissLoading();
       Get.snackbar(backgroundColor: Colors.black.withOpacity(0.5),"Error", "Failed to start WiFi connection.",titleText:Text("Error",style: TextStyle(color: Colors.red,fontSize: 18),),messageText: Text("Failed to start WiFi connection.",style: TextStyle(color: Colors.red),));
       return;
     }
 
-    for (int i = 0; i < 10; i++) {
-      await Future.delayed(Duration(seconds: 1));
-      bool isConnectedNow = await WiFiForIoTPlugin.isConnected();
-      if (isConnectedNow) {
-        localStorage.write('ssid', ssid);
-        localStorage.write('password', password);
-        isConnected.value = true;
-        isConnectedViaApp.value = true;
-        isConnecting.value = false;
-        startDisconnectTimer();
-        Get.snackbar(backgroundColor: Colors.black.withOpacity(0.5),"Connected", "Connected to $ssid",titleText: Text("Connected",style: TextStyle(color: Colors.green,fontSize:18),),messageText: Text("Connected to $ssid",style: TextStyle(color: Colors.green),));
-        oneRequest.dismissLoading();
-        showNotification("Wi-Fi Connected", "You have been connected to $ssid");
-        return;
-      } else {
-        isConnecting.value = false;
-        isConnectedViaApp.value = false;
-        oneRequest.dismissLoading();
-      }
-    }
+
+    
+    
+
   }
 
 
   /// Starts countdown timer for disconnecting WiFi
   void startDisconnectTimer() {
     disconnectTimer?.cancel();
-        remainingTime.value = disconnectTime;
 
 
     disconnectTimer = Timer.periodic(Duration(seconds: 1), (timer) {
@@ -222,6 +234,7 @@ Future<void> disconnectFromWiFi() async {
         showNotification("Wi-Fi Disconnected",
           "You have been disconnected from the Wi-Fi network.");
 
+      remainingTime.value = 0;
 
       isConnecting.value = false;
       isConnectedViaApp.value = false;
@@ -237,6 +250,7 @@ Future<void> disconnectFromWiFi() async {
     try {
       if (await WiFiForIoTPlugin.isConnected()) {
         bool isDisconnected = await WiFiForIoTPlugin.disconnect();
+        remainingTime.value = 0;
         print("WiFi disconnected: $isDisconnected");
 
         if (!isDisconnected) {
