@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "226170811222",
+    "project_id": "free-y-fi",
+    "storage_bucket": "free-y-fi.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:226170811222:android:c098d4a04ab123ac775cf7",
+        "android_client_info": {
+          "package_name": "org.yfi.free_y_fi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "226170811222-qok1mssuqp6s1hrepsjj8v9t4d6hlq1l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtbTBT6x1Nco-WYU4CgRJXEpQRjc46uxE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "226170811222-qok1mssuqp6s1hrepsjj8v9t4d6hlq1l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "226170811222-allbpt4ao0ip82njo00ojhl3acriortj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.y-fi.freeYFi"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

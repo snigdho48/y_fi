@@ -175,7 +175,9 @@ class UserloginView extends GetView<UserloginController> {
                                 backgroundColor:
                                     MaterialStateProperty.all(Colors.white),
                               ),
-                onPressed: () {},
+                onPressed: () {
+                  controller.fb.signInFB();
+                },
               ),
               Text('facebook', style: TextStyle(
                                     fontSize: 10,
@@ -193,7 +195,9 @@ class UserloginView extends GetView<UserloginController> {
                                 backgroundColor:
                                     MaterialStateProperty.all(Colors.white),
                               ),
-                onPressed: () {},
+                onPressed: () {
+                                controller.google.signInGoogle();
+                              },
               ),
               Text('Google', style: TextStyle(fontSize: 10,color: Colors.lightGreenAccent)),
             ],

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:free_y_fi/app/modules/notifications/notifications.dart';
-
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -40,12 +41,15 @@ void main() async {
     oneRequest.loadingconfig();
 
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-    await GetStorage.init(); 
+  await GetStorage.init();
 
-FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   await initializeNotifications();
   await Workmanager().initialize(
-    callbackDispatcher, 
+    callbackDispatcher,
     isInDebugMode: false,
   );
 
@@ -103,3 +107,5 @@ FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
     FlutterNativeSplash.remove();
   });
 }
+
+

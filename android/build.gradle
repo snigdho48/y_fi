@@ -1,14 +1,33 @@
-allprojects {
+buildscript {
     repositories {
-        google()
-        mavenCentral()
+        google()  // Google's Maven repository
+        mavenCentral()  // Maven Central repository for other dependencies
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0"
+
+        // Android Gradle plugin version for Gradle 8.x
+        classpath 'com.android.tools.build:gradle:8.0.0'  // Ensure compatibility with Gradle 8.x
+
+        // Google Services plugin version
+        classpath 'com.google.gms:google-services:4.3.15'  // Firebase configuration support
     }
 }
 
-rootProject.buildDir = "../build"
+allprojects {
+    repositories {
+        google()  // Google repository for Firebase and Android dependencies
+        mavenCentral()  // Maven Central repository
+    }
+}
+
+rootProject.buildDir = "../build"  // Custom build output directory
+
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
+
 subprojects {
     project.evaluationDependsOn(":app")
 }

@@ -10,55 +10,11 @@ class WificonnectView extends GetView<WificonnectController> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-   appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(50),
-        child: Container(
-          padding:  EdgeInsets.only(top:MediaQuery.of(context).padding.top),
-          height: Get.height * .1,
-          width: Get.width,
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 5,
-                blurRadius: 7,
-                offset: const Offset(0, 3), // changes position of shadow
-              ),
-            ],
-           
-            gradient: LinearGradient(
-              colors: [const Color.fromARGB(255, 0, 149, 229), const Color.fromARGB(255, 1, 93, 252)], // Colors for the gradient
-              begin: Alignment.topLeft, // Starting point of the gradient
-              end: Alignment.bottomRight, // End point of the gradient
-            ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            
-            children: [
-            
-              const Text(
-                'WiFi Connect',
-                style: TextStyle(
-                  fontSize: 26,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+   
 
       body: SingleChildScrollView(
-        child: Container(
-           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [const Color.fromARGB(255, 59, 160, 244), const Color.fromARGB(255, 0, 195, 255)], // Colors for the gradient
-              begin: Alignment.topLeft, // Starting point of the gradient
-              end: Alignment.bottomRight, // End point of the gradient
-            ),
-          ),
+        child: SizedBox(
+          
           height: Get.height *.9115,
           child: Center(
             child: Padding(
@@ -68,39 +24,85 @@ class WificonnectView extends GetView<WificonnectController> {
             
                 
                 children: [
-                  Container(
-                     decoration: BoxDecoration(
-                      color: Colors.blue, // Background color
-                      borderRadius: BorderRadius.circular(20), // Rounded border
-                      border: Border.all(
-                          color: Colors.white,
-                          width: 2), // Border color & thickness
-                    ),
-                    height: Get.width,
-                    width: Get.width,
-                    child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20), // Apply clippingr
+                  SizedBox(height: Get.height*.1,),
+              Row(mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center,
+              spacing: 5,
+              children: [
+                 RichText(text: 
+               TextSpan(
+                 text: 'Scan QR Code to',
+                 style: TextStyle(fontSize: Get.width*.07, fontWeight: FontWeight.normal,),
+               )
+               ),
+                  RichText(
+                          text: TextSpan(
+                        text: 'Connect',
+                        style: TextStyle(
+                          fontSize: Get.width * .07,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.lightGreenAccent,
+                        ),
+                      )),
+              ],
+              ),
+                   SizedBox(height: Get.height*.03),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(9),
+                    child: SizedBox(
+                      
+                      height: Get.width*.7,
+                      width: Get.width*.7,
                       child: QRView(
+                        overlayMargin: EdgeInsets.zero,
+                      
                         key: controller.qrKey,
                         overlay: QrScannerOverlayShape(
-                            borderColor: Colors.red,
-                            borderRadius: 10,
-                            borderLength: 30,
+                            borderColor: Colors.lightGreenAccent,
+                            borderRadius: 5,
+                            borderLength: 50,
                             borderWidth: 10,
-                            cutOutSize: 300),
+                            overlayColor: Colors.black.withAlpha(100),
+                           
+                      
+                            cutOutSize: Get.width * 0.7),
                         onQRViewCreated:controller.onQRViewCreated,
                       ),
                     ),
                   ),
                   SizedBox(height: 20),
-                  Obx(() => Text(
-                        controller.qrCodeResult.isEmpty
-                            ? 'Scan a QR Code'
-                            : 'WiFi: ${controller.ssidController.text}',
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      )),
-                 
-                  const SizedBox(height: 20),
+                  Obx(()  {
+                    if (controller.qrCodeResult.isEmpty)
+                    {
+                      return const SizedBox.shrink();
+                    }
+                    
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      spacing: 5,
+                      children: [
+                        RichText(
+                            text: TextSpan(
+                          text: 'Y-Fi Name:',
+                          style: TextStyle(
+                            fontSize: Get.width * .06,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.lightGreenAccent,
+                          ),
+                        )),
+                        RichText(
+                            text: TextSpan(
+                          text: controller.qrCodeResult.isEmpty
+                              ? ""
+                              : controller.ssidController.text,
+                          style: TextStyle(
+                            fontSize: Get.width * .06,
+                           
+                          ),
+                        )),
+                      ],
+                    );}
+                  ),
                   Obx(() {
                     if (controller.qrCodeResult.isEmpty) {
                       return const SizedBox.shrink();
@@ -125,11 +127,28 @@ class WificonnectView extends GetView<WificonnectController> {
                             ),
                             
                           ),
-                      child: Text(
-                          controller.isConnected.value  ? "Disconnect" : "Connect",style: TextStyle(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            controller.isConnected.value
+                                ? "Disconnect"
+                                : "Connect",
+                            style: TextStyle(
+                              fontSize: Get.width * .06,
+                              color: Colors.black,
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Icon(
+                            controller.isConnected.value
+                                ? Icons.wifi_off
+                                : Icons.wifi,
                             color: Colors.black,
-                            fontSize: 22,
-                          ),),
+                          ),
+                        ],
+                      )
                     );
                   }),
                   SizedBox(height: 20),
