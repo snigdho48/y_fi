@@ -6,7 +6,6 @@ import 'package:wifi_iot/wifi_iot.dart';
 import 'dart:async';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
-import 'package:one_request/one_request.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -15,8 +14,9 @@ class WificonnectController extends GetxController {
   RxBool isConnected = false.obs;
   RxBool isConnecting = false.obs;
   RxInt remainingTime = 0.obs; 
-  final disconnectTime = 60;
+  final disconnectTime = 60*60;
   Timer? disconnectTimer;
+  Timer? loadingtimer;
   Timer? connectivityMonitor;
   RxBool isConnectedViaApp = false.obs;
   final qrCodeResult = ''.obs;
@@ -25,7 +25,8 @@ class WificonnectController extends GetxController {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   final jsonList = List<Map<String, String>>.empty().obs;
   final localStorage = GetStorage();
-  
+  final isLoading = false.obs;
+  final loadingCount = 0.obs;
   TextEditingController ssidController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -49,30 +50,97 @@ class WificonnectController extends GetxController {
 
   /// Requests required permissions
 Future<bool> requestPermissions() async {
-    Map<Permission, PermissionStatus> statuses = await [
+    List<Permission> requiredPermissions = [
       Permission.location,
       Permission.camera,
       Permission.backgroundRefresh,
       Permission.nearbyWifiDevices, // Required for Android 13+
       Permission.notification, // For notification permissions (Android 13+)
-    ].request();
+    ];
 
-    bool allGranted = statuses.values.every((status) => status.isGranted);
+    Map<Permission, PermissionStatus> statuses =
+        await requiredPermissions.request();
 
-    if (!allGranted) {
-      var notGranted = statuses.entries.where((entry) => entry.value.isDenied);
-      var denied = notGranted.map((e) => e.key).toList();
-      // get denied permissions name
-    
-      Get.snackbar(backgroundColor: Colors.black.withOpacity(0.5),"Permissions Required", "Please grant permission ${denied.map(
-        (e)=>e.toString().split('.').last).join(', '
-      )}.",titleText:Text("Error",style: TextStyle(color: Colors.red,fontSize: 18),),messageText: Text("Please grant all required permissions.",style: TextStyle(color: Colors.red),));
+    if(statuses[Permission.location] == PermissionStatus.denied){
+      Get.snackbar(
+        "Permissions Required",
+        "Please grant permission ${Permission.location.toString().split('.').last}.",
+        backgroundColor: Colors.black.withOpacity(0.5),
+        titleText: Text(
+          "Error",
+          style: TextStyle(color: Colors.red, fontSize: 18),
+        ),
+        messageText: Text(
+          "Please grant ${Permission.location.toString().split('.').last} required permissions.",
+          style: TextStyle(color: Colors.red),
+        ),
+      );
+      print("❌ Location permission denied");
       return false;
     }
+    if(statuses[Permission.camera] == PermissionStatus.denied){
+      Get.snackbar(
+        "Permissions Required",
+        "Please grant permission ${Permission.camera.toString().split('.').last}.",
+        backgroundColor: Colors.black.withOpacity(0.5),
+        titleText: Text(
+          "Error",
+          style: TextStyle(color: Colors.red, fontSize: 18),
+        ),
+        messageText: Text(
+          "Please grant ${Permission.camera.toString().split('.').last} required permissions.",
+          style: TextStyle(color: Colors.red),
+        ),
+      );
+      print("❌ Camera permission denied");
+            return false;
+
+    }
+
+    if(statuses[Permission.nearbyWifiDevices] == PermissionStatus.denied){
+      Get.snackbar(
+        "Permissions Required",
+        "Please grant permission ${Permission.nearbyWifiDevices.toString().split('.').last}.",
+        backgroundColor: Colors.black.withOpacity(0.5),
+        titleText: Text(
+          "Error",
+          style: TextStyle(color: Colors.red, fontSize: 18),
+        ),
+        messageText: Text(
+          "Please grant ${Permission.nearbyWifiDevices.toString().split('.').last} required permissions.",
+          style: TextStyle(color: Colors.red),
+        ),
+      );
+      print("❌ Nearby WiFi Devices permission denied");
+            return false;
+
+    }
+    if(statuses[Permission.notification] == PermissionStatus.denied){
+      Get.snackbar(
+        "Permissions Required",
+        "Please grant permission ${Permission.notification.toString().split('.').last}.",
+        backgroundColor: Colors.black.withOpacity(0.5),
+        titleText: Text(
+          "Error",
+          style: TextStyle(color: Colors.red, fontSize: 18),
+        ),
+        messageText: Text(
+          "Please grant ${Permission.notification.toString().split('.').last} required permissions.",
+          style: TextStyle(color: Colors.red),
+        ),
+      );
+      print("❌ Notification permission denied");
+            return false;
+
+    }
+
+
+    
 
     print("✅ All required permissions granted.");
     return true;
   }
+
 
 
   /// Monitors WiFi status every 10 seconds
@@ -95,12 +163,11 @@ Future<bool> isLocationEnabled() async {
 
 /// Connects to a Wi-Fi network
   Future<void> connectToWiFi() async {
-    oneRequest.loading();
+
  isConnected.value = false;
 remainingTime.value = disconnectTime;
     // ✅ Ensure Location Services Are Enabled
     if (!await isLocationEnabled()) {
-      await oneRequest.dismissLoading();
       await Permission.location.request();
       Get.snackbar(backgroundColor: Colors.black.withOpacity(0.5),"Error", "Please enable location services.",titleText:Text("Error",style: TextStyle(color: Colors.red,fontSize: 18),),messageText: Text("Please enable location services.",style: TextStyle(color: Colors.red),));
       return;
@@ -121,7 +188,6 @@ remainingTime.value = disconnectTime;
     if (!ssidExists) {
       Get.snackbar(backgroundColor: Colors.black.withOpacity(0.5),
           "Error", "WiFi '$ssid' not found in available networks.",titleText:Text("Error",style: TextStyle(color: Colors.red,fontSize: 18),),messageText: Text("WiFi '$ssid' not found in available networks.",style: TextStyle(color: Colors.red),));
-      oneRequest.dismissLoading();
       return;
     }
 
@@ -171,7 +237,7 @@ remainingTime.value = disconnectTime;
               "Connected to $ssid",
               style: TextStyle(color: Colors.green),
             ));
-               oneRequest.dismissLoading();
+        
         try {
           showNotification(
               "Wi-Fi Connected", "You have been connected to $ssid");
@@ -183,15 +249,9 @@ remainingTime.value = disconnectTime;
     } else {
       isConnecting.value = false;
       isConnected.value = false;
-      oneRequest.dismissLoading();
       Get.snackbar(backgroundColor: Colors.black.withOpacity(0.5),"Error", "Failed to start WiFi connection.",titleText:Text("Error",style: TextStyle(color: Colors.red,fontSize: 18),),messageText: Text("Failed to start WiFi connection.",style: TextStyle(color: Colors.red),));
       return;
     }
-
-
-    
-    
-
   }
 
 
@@ -206,6 +266,22 @@ remainingTime.value = disconnectTime;
       } else {
         disconnectWiFi();
         timer.cancel();
+      }
+    });
+  }
+    void startloadingTimer() {
+      print('started');
+    loadingtimer?.cancel();
+    loadingCount.value = 20;
+    isLoading.value = true;
+
+    loadingtimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (loadingCount.value > 0) {
+        loadingCount.value--;
+      } else {
+        timer.cancel();
+        isLoading.value = false;
+        connectToWiFi();
       }
     });
   }

@@ -48,6 +48,13 @@ Future<UserCredential> signInWithGoogle() async {
         print("Stored name: ${storage.read('name')}");
 
       }
+      Get.snackbar(
+        "Success",
+        "Welcome ${result.user!.displayName}",
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.black.withOpacity(0.5),
+        colorText: Colors.green,
+      );
 
       Get.offAllNamed(Routes.WIFICONNECT);
       return;
