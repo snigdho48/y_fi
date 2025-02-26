@@ -58,14 +58,16 @@ class WificonnectView extends GetView<WificonnectController> {
                   children: [
                      RichText(text: 
                    TextSpan(
-                     text: controller.isConnected.value?'Connected To':'Scan QR Code to',
+                     text: controller.isConnected.value?'Connected To':controller.isRun.value?'Reconnect to':'Scan QR Code to',
                      style: TextStyle(    fontSize:controller.isConnected.value? Get.width * .05
                                   : Get.width * .07, fontWeight: FontWeight.normal,),
                    )
                    ),
                       RichText(
                               text: TextSpan(
-                            text:controller.isConnected.value?' ${controller.ssidController.text}': 'Connect',
+                            text:controller.isConnected.value?' ${controller.ssidController.text}': controller.isRun.value
+                                      ? 'Free Y-Fi'
+                                      : 'Connect',
                             style: TextStyle(
                               fontSize:controller.isConnected.value? Get.width * .05
                                   : Get.width * .07,
@@ -78,7 +80,7 @@ class WificonnectView extends GetView<WificonnectController> {
                  ),
                        SizedBox(height: Get.height*.03),
                    Obx((){
-                    if(!controller.isConnected.value){
+                    if(!controller.isConnected.value && !controller.isRun.value ){
                       return ClipRRect(
                     borderRadius: BorderRadius.circular(9),
                     child: SizedBox(
@@ -160,7 +162,9 @@ class WificonnectView extends GetView<WificonnectController> {
                           ),
                           
                           Text(
-                            'Remaining Time',
+                           controller.isRun.value
+                                      ? 'Session Expired'
+                                      : 'Remaining Time',
                             style: TextStyle(
                               fontSize: Get.width * .04,
                               fontWeight: FontWeight.bold,
@@ -187,7 +191,9 @@ class WificonnectView extends GetView<WificonnectController> {
                           children: [
                             RichText(
                                 text: TextSpan(
-                              text: controller.isConnected.value?'Y-Fi Partner:':'Y-Fi Name:',
+                              text: controller.isConnected.value?'Y-Fi Partner: ': controller.isRun.value
+                                      ? 'Reconnect: '
+                                      : 'Y-Fi Name:',
                               style: TextStyle(
                                 fontSize: Get.width * .05,
                                 fontWeight: FontWeight.bold,
@@ -200,7 +206,9 @@ class WificonnectView extends GetView<WificonnectController> {
                                   ? ""
                                   : controller.isConnected.value
                                       ? controller.ssidController.text
-                                      : controller.ssidController.text,
+                                      : controller.isRun.value
+                                          ? 'Your Session Expired'
+                                          : controller.ssidController.text,
                               style: TextStyle(
                                 fontSize: Get.width * .05,
                                
@@ -241,7 +249,7 @@ class WificonnectView extends GetView<WificonnectController> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               RichText(text: TextSpan(
-                                text: controller.isConnected.value
+                                text: controller.isConnected.value 
                                     ? "Disconnect"
                                     : "Get",
                                 style: TextStyle(
@@ -294,7 +302,7 @@ class WificonnectView extends GetView<WificonnectController> {
             ),
           ),
           Obx((){
-            if(!controller.isConnected.value){
+            if(!controller.isConnected.value || !controller.isRun.value){
               return     Positioned(
             bottom: 0,
             left: 0,
@@ -313,10 +321,10 @@ class WificonnectView extends GetView<WificonnectController> {
             ),
           );
             }
-            return const SizedBox.shrink();
+            return const SizedBox(height: 0,);
           }),
           Obx(() {
-            if (controller.isConnected.value) {
+            if (controller.isConnected.value && !controller.isRun.value) {
               return Positioned(
                 bottom: 0,
                 left: 0,
@@ -335,7 +343,9 @@ class WificonnectView extends GetView<WificonnectController> {
                 ),
               );
             }
-            return const SizedBox.shrink();
+            return const SizedBox(
+              height: 0,
+            );
           }),
           Obx(() {
             if (controller.isLoading.value) {
@@ -356,7 +366,9 @@ class WificonnectView extends GetView<WificonnectController> {
                 ),
               );
             }
-            return const SizedBox.shrink();
+            return const SizedBox(
+              height: 0,
+            );
           }),
         ],
       ),

@@ -14,8 +14,9 @@ class WificonnectController extends GetxController {
   RxBool isConnected = false.obs;
   RxBool isConnecting = false.obs;
   RxInt remainingTime = 0.obs; 
-  final disconnectTime = 60*60;
+  final disconnectTime = 10;
   Timer? disconnectTimer;
+  RxBool isRun = false.obs;
   Timer? loadingtimer;
   Timer? connectivityMonitor;
   RxBool isConnectedViaApp = false.obs;
@@ -266,11 +267,13 @@ remainingTime.value = disconnectTime;
       } else {
         disconnectWiFi();
         timer.cancel();
+        isRun.value = true;
       }
     });
   }
     void startloadingTimer() {
       print('started');
+      isRun.value = false;
     loadingtimer?.cancel();
     loadingCount.value = 20;
     isLoading.value = true;
