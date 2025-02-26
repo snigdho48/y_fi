@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Free_Y_FI - Test1</string>
+    <string name="facebook_app_id">1205683604359940</string>
+    <string name="fb_login_protocol_scheme">fb1205683604359940</string>
+    <string name="facebook_client_token">31b454b33e5259eaa5c3ed4e9741cba3</string>
+
+
+</resources>

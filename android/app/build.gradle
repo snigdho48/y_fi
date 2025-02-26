@@ -33,13 +33,16 @@ android {
     signingConfigs {
         release {
             storeFile file('free_y_fi_keystore.jks')
-            storePassword '22292646'
+            storePassword '22292646s'
             keyAlias 'free_y_fi'
-            keyPassword '22292646'
+            keyPassword '22292646s'
         }
     }
 
     buildTypes {
+        debug {
+            signingConfig signingConfigs.release
+        }
         release {
             minifyEnabled true
             shrinkResources true
@@ -56,7 +59,7 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:32.7.0') // Use latest BOM
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.facebook.android:facebook-android-sdk:latest.release'
-
+    implementation 'com.google.android.gms:play-services-auth:20.7.0'
     implementation 'androidx.multidex:multidex:2.0.1'
 }
 

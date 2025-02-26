@@ -52,6 +52,7 @@ dependencies:
   google_sign_in: ^6.2.2
   firebase_auth: ^5.5.0
   flutter_facebook_auth: ^7.1.1
+  mobile_device_identifier: ^0.0.3
 
 
 

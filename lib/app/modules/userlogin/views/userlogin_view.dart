@@ -61,59 +61,73 @@ class UserloginView extends GetView<UserloginController> {
                     SizedBox(height: Get.height * 0.02),
                     Image.asset('assets/icon/app_logo.png'),
                     SizedBox(height: Get.height * 0.07),
-                    TextField(
-          controller: controller.emailController.value,  // Accessing the value of Rx<TextEditingController>
-          decoration: InputDecoration(
-            constraints: BoxConstraints(
-              maxWidth: Get.width * 0.85,
-            ),
-            floatingLabelBehavior: FloatingLabelBehavior.never,
-            label: Center(
-              child:RichText(text: 
-                        TextSpan(
-                          
-                          children: [
-                            TextSpan(
-                              text: 'Enter Your Phone or Email',
-                              style: TextStyle(
-                                fontSize: Get.width * 0.04,
-                                fontWeight: FontWeight.normal,
-                                color: Color(0xFF191B41),
-                                height: 1.5,
-                              ),
-                            ),
-                          ],
-                        ),
-                       ),
-            ),
+        //             TextFormField(
+        //               textAlign: TextAlign.center,
+        //               style: TextStyle(
+        //                 color: Color(0xFF191B41),
+        //                 fontSize: Get.width * 0.05,
+        //               ),
+        //               validator: (value) => controller.isValidPhoneNumber(value)
+        //                   ? null
+        //                   : 'Please enter a valid phone number',
+                      
+        //   controller: controller.emailController.value,  // Accessing the value of Rx<TextEditingController>
+        //   decoration: InputDecoration(
+        //     constraints: BoxConstraints(
+        //       maxWidth: Get.width * 0.85,
+              
+        //     ),
             
-            labelStyle: TextStyle(
-              color: Color(0xFF191B41),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(40),
-              borderSide: BorderSide(
-                color: Colors.lightGreenAccent, // Light green border on focus
-              ),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(40),
-              borderSide: BorderSide(
-                color: Colors.lightGreenAccent, // Light green border when enabled
-              ),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(40),
-              borderSide: BorderSide(
-                color: Colors.lightGreenAccent,
-              ),
-            ),
-            filled: true,
-            fillColor: Colors.white,  // White background
-          ),
-        ),SizedBox(height: Get.height * 0.04),
+        //     floatingLabelBehavior: FloatingLabelBehavior.never,
+        //     label: Center(
+        //       child:RichText(text: 
+        //                 TextSpan(
+                          
+        //                   children: [
+        //                     TextSpan(
+        //                       text: 'Enter Your Phone ',
+        //                       style: TextStyle(
+        //                         fontSize: Get.width * 0.04,
+        //                         fontWeight: FontWeight.normal,
+        //                         color: Color(0xFF191B41),
+        //                         height: 1.5,
+        //                       ),
+        //                     ),
+        //                   ],
+        //                 ),
+        //                ),
+        //     ),
+            
+        //     labelStyle: TextStyle(
+        //       color: Color(0xFF191B41),
+        //     ),
+        //     focusedBorder: OutlineInputBorder(
+        //       borderRadius: BorderRadius.circular(40),
+        //       borderSide: BorderSide(
+        //         color: Colors.lightGreenAccent, // Light green border on focus
+        //       ),
+        //     ),
+        //     enabledBorder: OutlineInputBorder(
+        //       borderRadius: BorderRadius.circular(40),
+        //       borderSide: BorderSide(
+        //         color: Colors.lightGreenAccent, // Light green border when enabled
+        //       ),
+        //     ),
+        //     focusedErrorBorder: OutlineInputBorder(
+        //       borderRadius: BorderRadius.circular(40),
+        //       borderSide: BorderSide(
+        //         color: Colors.lightGreenAccent,
+        //       ),
+        //     ),
+        //     filled: true,
+        //     fillColor: Colors.white,  // White background
+            
+        //   ),
+        // ),SizedBox(height: Get.height * 0.04),
+     
+     
       Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         spacing: 10,
         children: [
          RichText(
@@ -130,79 +144,81 @@ class UserloginView extends GetView<UserloginController> {
                             ],
                           ),
                         ),
-          SizedBox(width: Get.width * 0.04),
-          Column(
-            children: [
-              IconButton(
-                icon: FaIcon(FontAwesomeIcons.phone,color: Color(0xFF191B41),size: 18,),
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.white),
-                ),
-                
-                onPressed: () {},
-              ),
-              Text('Phone', style: TextStyle(
-                                    fontSize: 10,
-                                    color: Colors.lightGreenAccent)),
-            ],
-          ),
-            Column(
-                          children: [
-                            IconButton(
-                              icon: FaIcon(FontAwesomeIcons.envelope,
-                                color: Color(0xFF191B41),
-                                size: 18,
-                              ),
-                               style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all(Colors.white),
-                              ),
-                              onPressed: () {},
+          // SizedBox(width: Get.width * 0.04),
+         
+          //   Column(
+          //                 children: [
+          //                   IconButton(
+          //                     icon: FaIcon(FontAwesomeIcons.envelope,
+          //                       color: Color(0xFF191B41),
+          //                       size: 18,
+          //                     ),
+          //                      style: ButtonStyle(
+          //                       backgroundColor:
+          //                           MaterialStateProperty.all(Colors.white),
+          //                     ),
+          //                     onPressed: () {
+                                
+          //                     },
+          //                   ),
+          //                   Text('Email', style: TextStyle(
+          //                           fontSize: 10,
+          //                           color: Colors.lightGreenAccent)),
+          //                 ],
+          //               ),
+       Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        spacing: 20,
+        children: [
+          
+             Column(
+                              children: [
+                                IconButton(
+                                  icon: FaIcon(
+                                    FontAwesomeIcons.facebook,
+                                    color: Color(0xFF191B41),
+                                    size: 18,
+                                  ),
+                                  style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all(Colors.white),
+                                  ),
+                                  onPressed: () {
+                                    controller.loginWithFacebook();
+                                  },
+                                ),
+                                Text('facebook',
+                                    style: TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.lightGreenAccent)),
+                              ],
                             ),
-                            Text('Email', style: TextStyle(
-                                    fontSize: 10,
-                                    color: Colors.lightGreenAccent)),
-                          ],
-                        ),
-          Column(
-            children: [
-              IconButton(
-                icon: FaIcon(FontAwesomeIcons.facebook,
-                                color: Color(0xFF191B41),
-                                size: 18,
-                              ),
-                               style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all(Colors.white),
-                              ),
-                onPressed: () {
-                  controller.fb.signInFB();
-                },
-              ),
-              Text('facebook', style: TextStyle(
-                                    fontSize: 10,
-                                    color: Colors.lightGreenAccent)),
-            ],
-          ),
-          Column(
-            children: [
-              IconButton(
-                icon: FaIcon(FontAwesomeIcons.google,
-                                color: Color(0xFF191B41),
-                                size: 18,
-                              ),
-                               style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all(Colors.white),
-                              ),
-                onPressed: () {
-                                controller.google.signInGoogle();
-                              },
-              ),
-              Text('Google', style: TextStyle(fontSize: 10,color: Colors.lightGreenAccent)),
-            ],
-          ),
+                            Column(
+                              children: [
+                                IconButton(
+                                  icon: FaIcon(
+                                    FontAwesomeIcons.google,
+                                    color: Color(0xFF191B41),
+                                    size: 18,
+                                  ),
+                                  style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all(Colors.white),
+                                  ),
+                                  onPressed: () {
+                                    controller.loginWithGoogle();
+                                  },
+                                ),
+                                Text('Google',
+                                    style: TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.lightGreenAccent)),
+                              ],
+                            ),
+        
         ],
+       )],
       ),
                   
               
@@ -286,26 +302,27 @@ class UserloginView extends GetView<UserloginController> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       
                       children: [
-                        SizedBox(
-                          width: Get.width * 0.37,
-                          height: Get.height * 0.05,
-                          child: ElevatedButton(
-                            onPressed: controller.wificonnect,
+                        // SizedBox(
+                        //   width: Get.width * 0.37,
+                        //   height: Get.height * 0.05,
+                        //   child: ElevatedButton(
+                        //     onPressed: controller.login,
                             
-                            child: Text('User Login', style: TextStyle(fontSize: Get.width*.05,color: Color(0xFF191B41)),),
-                            style: ButtonStyle(
+                        //     child: Text('User Login', style: TextStyle(fontSize: Get.width*.05,color: Color(0xFF191B41)),),
+                        //     style: ButtonStyle(
                               
-                              backgroundColor: MaterialStateProperty.all(
-                                Colors.lightGreenAccent,
-                              ),
-                              shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(40),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
+                        //       backgroundColor: MaterialStateProperty.all(
+                        //         Colors.lightGreenAccent,
+                        //       ),
+                        //       shape: MaterialStateProperty.all(
+                        //         RoundedRectangleBorder(
+                        //           borderRadius: BorderRadius.circular(40),
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                       
                         SizedBox(
                             width: Get.width * 0.37,
                           height: Get.height * 0.05,

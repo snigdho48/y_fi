@@ -10,7 +10,28 @@ class WificonnectView extends GetView<WificonnectController> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-   
+     appBar: PreferredSize(
+        preferredSize: Size.fromHeight(
+            MediaQuery.of(context).padding.top ), // Custom height
+        child: SizedBox(
+          height: kToolbarHeight+MediaQuery.of(context).padding.top,
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    
+                   controller.signOut();
+                  },
+                  icon: Icon(Icons.logout, color: Colors.white),
+                ),
+              ],
+            ),
+        ),
+        ),
+      
+
 
       body: SingleChildScrollView(
         child: SizedBox(
@@ -24,7 +45,7 @@ class WificonnectView extends GetView<WificonnectController> {
             
                 
                 children: [
-                  SizedBox(height: Get.height*.1,),
+         
               Row(mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center,
               spacing: 5,
               children: [

@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "226170811222-f61sed0oejs0sh9mgfbi84hk3kh660ne.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.yfi.free_y_fi",
+            "certificate_hash": "fd68c10fb2651a3f90598610d2fa188296dff8cd"
+          }
+        },
+        {
           "client_id": "226170811222-qok1mssuqp6s1hrepsjj8v9t4d6hlq1l.apps.googleusercontent.com",
           "client_type": 3
         }

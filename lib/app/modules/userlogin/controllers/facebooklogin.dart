@@ -3,8 +3,10 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:free_y_fi/app/routes/app_pages.dart';
 import 'package:get/get.dart';
-
+import 'package:mobile_device_identifier/mobile_device_identifier.dart';
+import 'package:get_storage/get_storage.dart';
 class FacebookloginController extends GetxController {
+  final storage = GetStorage();
   @override
   void onInit() {
     super.onInit();
@@ -14,7 +16,7 @@ class FacebookloginController extends GetxController {
   Future<UserCredential?> signInWithFacebook() async {
     try {
       // Trigger the sign-in flow
-      final LoginResult loginResult = await FacebookAuth.instance.login();
+      final LoginResult loginResult = await FacebookAuth.instance.login(loginBehavior: LoginBehavior.nativeWithFallback);
 
       // Check the login status
       if (loginResult.status == LoginStatus.success) {
@@ -47,16 +49,32 @@ class FacebookloginController extends GetxController {
 
   Future<void> signInFB () async {
     final result=await signInWithFacebook();
-    if(result?.user!=null){
+    if(result != null && result.user!=null){
+           if (storage.read('deviceid') == null) {
+        final deviceid = await MobileDeviceIdentifier().getDeviceId();
+        await storage.write('deviceid', deviceid);
+       
+      }
+      if( storage.read('name') == null){
+ 
+        await storage.write('email', result.user!.email);
+        await storage.write('name', result.user!.displayName);
+        await storage.write('phone', result.user!.phoneNumber);
+    
+
+      }
       Get.offAllNamed(Routes.WIFICONNECT);
+      return;
     }
-    Get.snackbar(
-      "Error",
-      "Facebook login failed",
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.black.withOpacity(0.5),
-      colorText: Colors.red,
-    );
+   else{
+     Get.snackbar(
+        "Error",
+        "Facebook login failed",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.black.withOpacity(0.5),
+        colorText: Colors.red,
+      );
+   }
     
 
   }

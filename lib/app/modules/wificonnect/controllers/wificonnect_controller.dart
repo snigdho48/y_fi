@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:free_y_fi/app/modules/notifications/notifications.dart';
 import 'package:get/get.dart';
@@ -308,6 +309,24 @@ Future<void> disconnectFromWiFi() async {
         stopScanning();
       }
     });
+  }
+  void signOut() async {
+    try{
+      await disconnectFromWiFi();
+    }catch(e){
+      print(e);
+    }
+    try{
+      await FirebaseAuth.instance.signOut();
+    } catch (e) {
+      print(e);
+    }
+    await localStorage.remove('ssid');
+    await localStorage.remove('password');
+    await localStorage.remove('name');
+    await localStorage.remove('email');
+    await localStorage.remove('phone');
+    Get.offAllNamed('/home');
   }
 
   @override
