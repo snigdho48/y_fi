@@ -324,28 +324,29 @@ class UserloginView extends GetView<UserloginController> {
                         //   ),
                         // ),
                        
-                        SizedBox(
-                            width: Get.width * 0.37,
-                          height: Get.height * 0.05,
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            child: Text(
-                              'Partner Login',
-                              style: TextStyle(
-                                  fontSize: Get.width*.05, color: Color(0xFF191B41)),
-                            ),
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                Colors.lightGreenAccent,
-                              ),
-                              shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(40),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
+                        // SizedBox(
+                        //     width: Get.width * 0.37,
+                        //   height: Get.height * 0.05,
+                        //   child: ElevatedButton(
+                        //     onPressed: () {},
+                        //     child: Text(
+                        //       'Partner Login',
+                        //       style: TextStyle(
+                        //           fontSize: Get.width*.05, color: Color(0xFF191B41)),
+                        //     ),
+                        //     style: ButtonStyle(
+                        //       backgroundColor: MaterialStateProperty.all(
+                        //         Colors.lightGreenAccent,
+                        //       ),
+                        //       shape: MaterialStateProperty.all(
+                        //         RoundedRectangleBorder(
+                        //           borderRadius: BorderRadius.circular(40),
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                     
                       ],
                     )
 

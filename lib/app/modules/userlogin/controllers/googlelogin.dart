@@ -1,6 +1,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:free_y_fi/app/data/url.dart';
 import 'package:free_y_fi/app/routes/app_pages.dart';
 import 'package:free_y_fi/app/services/device_info.dart';
 import 'package:get/get.dart';
@@ -47,8 +48,9 @@ Future<UserCredential> signInWithGoogle() async {
 
       final devicedata = await getDeviceInfo();
       final response = await request.send(
-      url: 'http://ec2-3-108-205-134.ap-south-1.compute.amazonaws.com/api/auth/login/',
+      url: '${baseurl}auth/login/',
         method: RequestType.POST,
+        resultOverlay: true,
         body: {
           "email": result.user!.email,
           "password": result.user!.uid,
@@ -73,9 +75,9 @@ Future<UserCredential> signInWithGoogle() async {
           colorText: Colors.green,
         );
         Get.offAllNamed(Routes.WIFICONNECT);
-      }, (e) {
-        final er=CustomExceptionHandlers(error: e).getExceptionString();
-        print("Error: ${er.toString()}");
+      }, (er) {
+     
+        print("Error: ${er}");
         
           Get.snackbar(
           "Error",

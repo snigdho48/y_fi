@@ -668,10 +668,10 @@ packages:
     dependency: "direct main"
     description:
       name: one_request
-      sha256: f49fb40680c27088b1c57c553b0bbf04f445a093a5a38e81dd42547d0fb33c8c
+      sha256: "6277b4588c566f89826a4d47d9079afdc0829b68871362c364e44e9f81d117df"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3"
+    version: "1.0.7"
   path:
     dependency: transitive
     description:

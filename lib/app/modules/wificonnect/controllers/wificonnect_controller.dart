@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:free_y_fi/app/data/url.dart';
 import 'package:free_y_fi/app/modules/notifications/notifications.dart';
 import 'package:free_y_fi/app/services/device_info.dart';
 import 'package:get/get.dart';
@@ -287,8 +288,9 @@ remainingTime.value = disconnectTime;
       }
        request.send(
           url:
-              "http://ec2-3-108-205-134.ap-south-1.compute.amazonaws.com/api/data/collect/",
+              "${baseurl}data/collect/",
           method: RequestType.POST,
+          resultOverlay: false,
           body: {
             "device_id": value['device_id'],
             "device_name": value['device_name'],
@@ -297,6 +299,7 @@ remainingTime.value = disconnectTime;
             "partner": venuuuid.value,
             'ip':ip.value
           },
+          loader: false,
           header: {
             'Authorization': 'Bearer ${localStorage.read('token')}'
           }).then((value) => value.fold((data) {
@@ -440,14 +443,23 @@ Future<void> disconnectFromWiFi() async {
   void onQRViewCreated(QRViewController qrController) {
     controller = qrController;
     qrController.scannedDataStream.listen((scanData) async {
-      qrCodeResult.value = scanData.code ?? '';
+   if (!(scanData.code?.contains('?code=') ?? false)) {
+        return;
+      }
+      final finaldata = scanData.code?.split('?code=').last ?? '';
+      qrCodeResult.value = finaldata;
+      if(qrCodeResult.value.isEmpty){
+        return;
+      }
+      print("QR Code Result: ${scanData.code?.split('?code=')}");
       result.value = scanData;
       if (qrCodeResult.isNotEmpty) {
         stopScanning();
         print("QR Code Result: ${qrCodeResult.value}");
-        var response = await request.send(url:'http://ec2-3-108-205-134.ap-south-1.compute.amazonaws.com/api/venue/data/' , method: RequestType.POST, body: {
+        var response = await request.send(url:'${baseurl}venue/data/' , method: RequestType.POST, body: {
           'code': qrCodeResult.value
         },
+        resultOverlay: false,
         header: {
           'Authorization': 'Bearer ${localStorage.read('token')}'
         });
