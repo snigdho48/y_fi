@@ -9,16 +9,14 @@ import 'package:wifi_iot/wifi_iot.dart';
 import 'dart:async';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get_storage/get_storage.dart';
-
 
 class WificonnectController extends GetxController {
   RxBool isConnected = false.obs;
   final request = oneRequest();
   RxBool isConnecting = false.obs;
-  RxInt remainingTime = 0.obs; 
-  final disconnectTime = 30*60;
+  RxInt remainingTime = 0.obs;
+  final disconnectTime = 30 * 60;
   Timer? disconnectTimer;
   RxBool isRun = false.obs;
   Timer? loadingtimer;
@@ -42,27 +40,39 @@ class WificonnectController extends GetxController {
 
   @override
   void onInit() {
-
     super.onInit();
     requestPermissions();
     monitorWiFiStatus();
-    jsonList.value=[
+    jsonList.value = [
       {
-      'code': 'code1',
-      'venu':'Office',
-      "ssid": "A Maze Venture",
-      "password": "Amaze@2024#"
-    },
-      {'code': 'code2','venu':'MY Home', "ssid": "Snigdho_5G", "password": "22292646"},
-      {'code': 'code3','venu':"Vai's Home",  "ssid": "Sayed family", "password": "yameen2012"},
-      {'code': 'code4','venu':"Vai's Office",
-       "ssid": "AirStation", "password": "03070809"},
+        'code': 'code1',
+        'venu': 'Office',
+        "ssid": "A Maze Venture",
+        "password": "Amaze@2024#"
+      },
+      {
+        'code': 'code2',
+        'venu': 'MY Home',
+        "ssid": "Snigdho_5G",
+        "password": "22292646"
+      },
+      {
+        'code': 'code3',
+        'venu': "Vai's Home",
+        "ssid": "Sayed family",
+        "password": "yameen2012"
+      },
+      {
+        'code': 'code4',
+        'venu': "Vai's Office",
+        "ssid": "AirStation",
+        "password": "03070809"
+      },
     ];
-    
   }
 
   /// Requests required permissions
-Future<bool> requestPermissions() async {
+  Future<bool> requestPermissions() async {
     List<Permission> requiredPermissions = [
       Permission.location,
       Permission.camera,
@@ -74,7 +84,7 @@ Future<bool> requestPermissions() async {
     Map<Permission, PermissionStatus> statuses =
         await requiredPermissions.request();
 
-    if(statuses[Permission.location] == PermissionStatus.denied){
+    if (statuses[Permission.location] == PermissionStatus.denied) {
       Get.snackbar(
         "Permissions Required",
         "Please grant permission ${Permission.location.toString().split('.').last}.",
@@ -91,7 +101,7 @@ Future<bool> requestPermissions() async {
       print("❌ Location permission denied");
       return false;
     }
-    if(statuses[Permission.camera] == PermissionStatus.denied){
+    if (statuses[Permission.camera] == PermissionStatus.denied) {
       Get.snackbar(
         "Permissions Required",
         "Please grant permission ${Permission.camera.toString().split('.').last}.",
@@ -106,11 +116,10 @@ Future<bool> requestPermissions() async {
         ),
       );
       print("❌ Camera permission denied");
-            return false;
-
+      return false;
     }
 
-    if(statuses[Permission.nearbyWifiDevices] == PermissionStatus.denied){
+    if (statuses[Permission.nearbyWifiDevices] == PermissionStatus.denied) {
       Get.snackbar(
         "Permissions Required",
         "Please grant permission ${Permission.nearbyWifiDevices.toString().split('.').last}.",
@@ -125,10 +134,9 @@ Future<bool> requestPermissions() async {
         ),
       );
       print("❌ Nearby WiFi Devices permission denied");
-            return false;
-
+      return false;
     }
-    if(statuses[Permission.notification] == PermissionStatus.denied){
+    if (statuses[Permission.notification] == PermissionStatus.denied) {
       Get.snackbar(
         "Permissions Required",
         "Please grant permission ${Permission.notification.toString().split('.').last}.",
@@ -143,18 +151,12 @@ Future<bool> requestPermissions() async {
         ),
       );
       print("❌ Notification permission denied");
-            return false;
-
+      return false;
     }
-
-
-    
 
     print("✅ All required permissions granted.");
     return true;
   }
-
-
 
   /// Monitors WiFi status every 10 seconds
   void monitorWiFiStatus() {
@@ -165,24 +167,47 @@ Future<bool> requestPermissions() async {
       isConnected.value = wifiStatus;
     });
   }
-Future<bool> isLocationEnabled() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      Get.snackbar(backgroundColor: Colors.black.withOpacity(0.5),"Location Required", "Please enable location services.",titleText:Text("Error",style: TextStyle(color: Colors.red,fontSize: 18),),messageText: Text("Please enable location services.",style: TextStyle(color: Colors.red),));
+
+  Future<bool> isLocationEnabled() async {
+    bool isLocationEnabledwait =
+        await Permission.location.serviceStatus.isEnabled;
+    if (!isLocationEnabledwait) {
+      Get.snackbar(
+          backgroundColor: Colors.black.withOpacity(0.5),
+          "Location Required",
+          "Please enable location services.",
+          titleText: Text(
+            "Error",
+            style: TextStyle(color: Colors.red, fontSize: 18),
+          ),
+          messageText: Text(
+            "Please enable location services.",
+            style: TextStyle(color: Colors.red),
+          ));
       return false;
     }
     return true;
   }
 
-/// Connects to a Wi-Fi network
+  /// Connects to a Wi-Fi network
   Future<void> connectToWiFi() async {
-
- isConnected.value = false;
-remainingTime.value = disconnectTime;
+    isConnected.value = false;
+    remainingTime.value = disconnectTime;
     // ✅ Ensure Location Services Are Enabled
     if (!await isLocationEnabled()) {
       await Permission.location.request();
-      Get.snackbar(backgroundColor: Colors.black.withOpacity(0.5),"Error", "Please enable location services.",titleText:Text("Error",style: TextStyle(color: Colors.red,fontSize: 18),),messageText: Text("Please enable location services.",style: TextStyle(color: Colors.red),));
+      Get.snackbar(
+          backgroundColor: Colors.black.withOpacity(0.5),
+          "Error",
+          "Please enable location services.",
+          titleText: Text(
+            "Error",
+            style: TextStyle(color: Colors.red, fontSize: 18),
+          ),
+          messageText: Text(
+            "Please enable location services.",
+            style: TextStyle(color: Colors.red),
+          ));
       return;
     }
 
@@ -192,15 +217,36 @@ remainingTime.value = disconnectTime;
     String password = passwordController.text.trim();
 
     if (ssid.isEmpty || password.isEmpty) {
-      Get.snackbar(backgroundColor: Colors.black.withOpacity(0.5),"Error", "SSID and Password cannot be empty",titleText:Text("Error",style: TextStyle(color: Colors.red,fontSize: 18),),messageText: Text("SSID and Password cannot be empty",style: TextStyle(color: Colors.red),));
+      Get.snackbar(
+          backgroundColor: Colors.black.withOpacity(0.5),
+          "Error",
+          "SSID and Password cannot be empty",
+          titleText: Text(
+            "Error",
+            style: TextStyle(color: Colors.red, fontSize: 18),
+          ),
+          messageText: Text(
+            "SSID and Password cannot be empty",
+            style: TextStyle(color: Colors.red),
+          ));
       return;
     }
 
     // ✅ Check if SSID exists in the scanned WiFi list
     bool ssidExists = networks.any((network) => network.ssid == ssid);
     if (!ssidExists) {
-      Get.snackbar(backgroundColor: Colors.black.withOpacity(0.5),
-          "Error", "WiFi '$ssid' not found in available networks.",titleText:Text("Error",style: TextStyle(color: Colors.red,fontSize: 18),),messageText: Text("WiFi '$ssid' not found in available networks.",style: TextStyle(color: Colors.red),));
+      Get.snackbar(
+          backgroundColor: Colors.black.withOpacity(0.5),
+          "Error",
+          "WiFi '$ssid' not found in available networks.",
+          titleText: Text(
+            "Error",
+            style: TextStyle(color: Colors.red, fontSize: 18),
+          ),
+          messageText: Text(
+            "WiFi '$ssid' not found in available networks.",
+            style: TextStyle(color: Colors.red),
+          ));
       return;
     }
 
@@ -208,11 +254,22 @@ remainingTime.value = disconnectTime;
 
     bool isWifiEnabled = await WiFiForIoTPlugin.isEnabled();
     if (!isWifiEnabled) {
-      Get.snackbar(backgroundColor: Colors.black.withOpacity(0.5),"Error", "Please enable WiFi",titleText:Text("Error",style: TextStyle(color: Colors.red,fontSize: 18),),messageText: Text("Please enable WiFi",style: TextStyle(color: Colors.red),));
+      Get.snackbar(
+          backgroundColor: Colors.black.withOpacity(0.5),
+          "Error",
+          "Please enable WiFi",
+          titleText: Text(
+            "Error",
+            style: TextStyle(color: Colors.red, fontSize: 18),
+          ),
+          messageText: Text(
+            "Please enable WiFi",
+            style: TextStyle(color: Colors.red),
+          ));
       await WiFiForIoTPlugin.setEnabled(true);
     }
-   print(ssid);
-   print(password);
+    print(ssid);
+    print(password);
 
     try {
       await WiFiForIoTPlugin.getSSID()
@@ -227,89 +284,92 @@ remainingTime.value = disconnectTime;
       security: NetworkSecurity.WPA,
       withInternet: true,
     );
-    if (!connectionStarted){
-      
-      await Future.delayed(Duration(seconds:2),()async{
+    if (!connectionStarted) {
+      await Future.delayed(Duration(seconds: 2), () async {
         connectionStarted = await WiFiForIoTPlugin.connect(
-        ssid,
-        password: password,
-        security: NetworkSecurity.WPA,
-        withInternet: true,
+          ssid,
+          password: password,
+          security: NetworkSecurity.WPA,
+          withInternet: true,
         );
       });
     }
     if (connectionStarted) {
       print("✅ WiFi connection started");
-        localStorage.write('venu',venu.value );
-        localStorage.write('ssid', ssid);
-        localStorage.write('password', password);
+      localStorage.write('venu', venu.value);
+      localStorage.write('ssid', ssid);
+      localStorage.write('password', password);
 
-        isConnectedViaApp.value = true;
-        isConnecting.value = false;
+      isConnectedViaApp.value = true;
+      isConnecting.value = false;
 
-        startDisconnectTimer();
-        Get.snackbar(
-            backgroundColor: Colors.black.withOpacity(0.5),
+      startDisconnectTimer();
+      Get.snackbar(
+          backgroundColor: Colors.black.withOpacity(0.5),
+          "Connected",
+          "Connected to $ssid",
+          titleText: Text(
             "Connected",
+            style: TextStyle(color: Colors.green, fontSize: 18),
+          ),
+          messageText: Text(
             "Connected to $ssid",
-            titleText: Text(
-              "Connected",
-              style: TextStyle(color: Colors.green, fontSize: 18),
-            ),
-            messageText: Text(
-              "Connected to $ssid",
-              style: TextStyle(color: Colors.green),
-            ));
-        
-        try {
-          showNotification(
-              "Wi-Fi Connected", "You have been connected to $ssid");
-        } catch (e) {
-          print(e);
-        }
-     
+            style: TextStyle(color: Colors.green),
+          ));
 
+      try {
+        showNotification("Wi-Fi Connected", "You have been connected to $ssid");
+      } catch (e) {
+        print(e);
+      }
     } else {
       isConnecting.value = false;
       isConnected.value = false;
-      Get.snackbar(backgroundColor: Colors.black.withOpacity(0.5),"Error", "Failed to start WiFi connection.",titleText:Text("Error",style: TextStyle(color: Colors.red,fontSize: 18),),messageText: Text("Failed to start WiFi connection.",style: TextStyle(color: Colors.red),));
+      Get.snackbar(
+          backgroundColor: Colors.black.withOpacity(0.5),
+          "Error",
+          "Failed to start WiFi connection.",
+          titleText: Text(
+            "Error",
+            style: TextStyle(color: Colors.red, fontSize: 18),
+          ),
+          messageText: Text(
+            "Failed to start WiFi connection.",
+            style: TextStyle(color: Colors.red),
+          ));
       return;
     }
   }
-
 
   /// Starts countdown timer for disconnecting WiFi
   void startDisconnectTimer() async {
     disconnectTimer?.cancel();
     getDeviceInfo().then((value) {
-      if(connectFirstTime.value){
+      if (connectFirstTime.value) {
         ip.value = value['ip'] ?? '';
         connectFirstTime.value = false;
       }
-       request.send(
-          url:
-              "${baseurl}data/collect/",
-          method: RequestType.POST,
-          resultOverlay: false,
-          body: {
-            "device_id": value['device_id'],
-            "device_name": value['device_name'],
-            "device_os": value['device_os'],
-            "device_brand": value['device_brand'],
-            "partner": venuuuid.value,
-            'ip':ip.value
-          },
-          loader: false,
-          header: {
-            'Authorization': 'Bearer ${localStorage.read('token')}'
-          }).then((value) => value.fold((data) {
-            print(data);
-          }, (er) {
-            print(er.toString());
-          }));
+      request
+          .send(
+              url: "${baseurl}data/collect/",
+              method: RequestType.POST,
+              resultOverlay: false,
+              body: {
+                "device_id": value['device_id'],
+                "device_name": value['device_name'],
+                "device_os": value['device_os'],
+                "device_brand": value['device_brand'],
+                "partner": venuuuid.value,
+                'ip': ip.value
+              },
+              loader: false,
+              header: {'Authorization': 'Bearer ${localStorage.read('token')}'})
+          .then((value) => value.fold((data) {
+                print(data);
+              }, (er) {
+                print(er.toString());
+              }));
     });
-   
-    
 
     isConnected.value = true;
     disconnectTimer = Timer.periodic(Duration(seconds: 1), (timer) {
@@ -323,22 +383,22 @@ remainingTime.value = disconnectTime;
       }
     });
   }
-    void startloadingTimer() async{
-      if(localStorage.read('isFirstTime') == null){
-        localStorage.write('isFirstTime', false);
-        isFirstTime.value = false;
-        await WiFiForIoTPlugin.connect(
+
+  void startloadingTimer() async {
+    if (localStorage.read('isFirstTime') == null) {
+      localStorage.write('isFirstTime', false);
+      isFirstTime.value = false;
+      await WiFiForIoTPlugin.connect(
         ssidController.text.trim(),
         password: passwordController.text.trim(),
         security: NetworkSecurity.WPA,
         withInternet: true,
       );
+    } else {
+      isFirstTime.value = localStorage.read('isFirstTime');
+    }
 
-      }else{
-        isFirstTime.value = localStorage.read('isFirstTime');
-      }
-      
-      isRun.value = false;
+    isRun.value = false;
     loadingtimer?.cancel();
     loadingCount.value = 20;
     isLoading.value = true;
@@ -353,18 +413,19 @@ remainingTime.value = disconnectTime;
       }
     });
   }
-Future<void> disconnectFromWiFi() async {
 
+  Future<void> disconnectFromWiFi() async {
     bool disconnected = await WiFiForIoTPlugin.disconnect();
-          await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 2));
     if (disconnected) {
       print("✅ WiFi successfully disconnected");
     } else {
       print("❌ Failed to disconnect WiFi");
     }
   }
+
   /// Disconnects from Wi-Fi network
- Future<void> disconnectWiFi() async {
+  Future<void> disconnectWiFi() async {
     try {
       if (await WiFiForIoTPlugin.isConnected()) {
         bool isDisconnected = await WiFiForIoTPlugin.disconnect();
@@ -374,29 +435,51 @@ Future<void> disconnectFromWiFi() async {
           print("Trying alternative disconnect method...");
           await WiFiForIoTPlugin.disconnect();
         }
-
       }
-        showNotification("Wi-Fi Disconnected",
+      showNotification("Wi-Fi Disconnected",
           "You have been disconnected from the Wi-Fi network.");
 
       remainingTime.value = 0;
 
       isConnecting.value = false;
       isConnectedViaApp.value = false;
-      isConnected.value = false;  
+      isConnected.value = false;
       disconnectTimer?.cancel();
       controller?.resumeCamera();
-      Get.snackbar(backgroundColor: Colors.black.withOpacity(0.5),"Disconnected", "WiFi disconnected.",titleText: Text("Disconnected",style: TextStyle(color: Colors.green,fontSize:18),),messageText: Text("WiFi disconnected.",style: TextStyle(color: Colors.green),));
+      Get.snackbar(
+          backgroundColor: Colors.black.withOpacity(0.5),
+          "Disconnected",
+          "WiFi disconnected.",
+          titleText: Text(
+            "Disconnected",
+            style: TextStyle(color: Colors.green, fontSize: 18),
+          ),
+          messageText: Text(
+            "WiFi disconnected.",
+            style: TextStyle(color: Colors.green),
+          ));
     } catch (e) {
       print("Error disconnecting WiFi: $e");
-      Get.snackbar(backgroundColor: Colors.black.withOpacity(0.5),"Error", "Could not disconnect from WiFi.",titleText:Text("Error",style: TextStyle(color: Colors.red,fontSize: 18),),messageText: Text("Could not disconnect from WiFi.",style: TextStyle(color: Colors.red),));
+      Get.snackbar(
+          backgroundColor: Colors.black.withOpacity(0.5),
+          "Error",
+          "Could not disconnect from WiFi.",
+          titleText: Text(
+            "Error",
+            style: TextStyle(color: Colors.red, fontSize: 18),
+          ),
+          messageText: Text(
+            "Could not disconnect from WiFi.",
+            style: TextStyle(color: Colors.red),
+          ));
     }
   }
+
   Future<void> disconnectWiFi2() async {
     try {
       if (await WiFiForIoTPlugin.isConnected()) {
         bool isDisconnected = await WiFiForIoTPlugin.disconnect();
-        
+
         remainingTime.value = 0;
         venu.value = '';
         venuuuid.value = 0;
@@ -414,17 +497,38 @@ Future<void> disconnectFromWiFi() async {
           await WiFiForIoTPlugin.disconnect();
         }
       }
-        qrCodeResult.value = '';
-      
+      qrCodeResult.value = '';
 
       isConnected.value = false;
       isConnectedViaApp.value = false;
       disconnectTimer?.cancel();
       controller?.resumeCamera();
-      Get.snackbar(backgroundColor: Colors.black.withOpacity(0.5),"Disconnected", "WiFi disconnected.",titleText: Text("Disconnected",style: TextStyle(color: Colors.green,fontSize:18),),messageText: Text("WiFi disconnected.",style: TextStyle(color: Colors.green),));
+      Get.snackbar(
+          backgroundColor: Colors.black.withOpacity(0.5),
+          "Disconnected",
+          "WiFi disconnected.",
+          titleText: Text(
+            "Disconnected",
+            style: TextStyle(color: Colors.green, fontSize: 18),
+          ),
+          messageText: Text(
+            "WiFi disconnected.",
+            style: TextStyle(color: Colors.green),
+          ));
     } catch (e) {
       print("Error disconnecting WiFi: $e");
-      Get.snackbar(backgroundColor: Colors.black.withOpacity(0.5),"Error", "Could not disconnect from WiFi.",titleText:Text("Error",style: TextStyle(color: Colors.red,fontSize: 18),),messageText: Text("Could not disconnect from WiFi.",style: TextStyle(color: Colors.red),));
+      Get.snackbar(
+          backgroundColor: Colors.black.withOpacity(0.5),
+          "Error",
+          "Could not disconnect from WiFi.",
+          titleText: Text(
+            "Error",
+            style: TextStyle(color: Colors.red, fontSize: 18),
+          ),
+          messageText: Text(
+            "Could not disconnect from WiFi.",
+            style: TextStyle(color: Colors.red),
+          ));
     }
   }
 
@@ -437,18 +541,17 @@ Future<void> disconnectFromWiFi() async {
   void stopScanning() {
     controller?.pauseCamera();
     controller?.stopCamera();
-    
   }
 
   void onQRViewCreated(QRViewController qrController) {
     controller = qrController;
     qrController.scannedDataStream.listen((scanData) async {
-   if (!(scanData.code?.contains('?code=') ?? false)) {
+      if (!(scanData.code?.contains('?code=') ?? false)) {
         return;
       }
       final finaldata = scanData.code?.split('?code=').last ?? '';
       qrCodeResult.value = finaldata;
-      if(qrCodeResult.value.isEmpty){
+      if (qrCodeResult.value.isEmpty) {
         return;
       }
       print("QR Code Result: ${scanData.code?.split('?code=')}");
@@ -456,51 +559,37 @@ Future<void> disconnectFromWiFi() async {
       if (qrCodeResult.isNotEmpty) {
         stopScanning();
         print("QR Code Result: ${qrCodeResult.value}");
-        var response = await request.send(url:'${baseurl}venue/data/' , method: RequestType.POST, body: {
-          'code': qrCodeResult.value
-        },
-        resultOverlay: false,
-        header: {
-          'Authorization': 'Bearer ${localStorage.read('token')}'
-        });
-        
+        var response = await request.send(
+            url: '${baseurl}venue/data/',
+            method: RequestType.POST,
+            body: {'code': qrCodeResult.value},
+            resultOverlay: false,
+            header: {'Authorization': 'Bearer ${localStorage.read('token')}'});
 
-        response.fold(
-          (data) {
-            print(data);
+        response.fold((data) {
+          print(data);
           ssidController.text = data['ssid']!;
           passwordController.text = data['password']!;
           venu.value = data['venue_name']!;
           venuuuid.value = data['id']!;
-          
-          },
-          (er) {
-          Get.snackbar(
-          "Error",
-          "Error: $er",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.black.withOpacity(0.5),
-          colorText: Colors.red,
-          duration: Duration(seconds: 15)
-          
-        );
-
-          
-          }
-        );
-       
-
-   
+        }, (er) {
+          Get.snackbar("Error", "Error: $er",
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: Colors.black.withOpacity(0.5),
+              colorText: Colors.red,
+              duration: Duration(seconds: 15));
+        });
       }
     });
   }
+
   void signOut() async {
-    try{
+    try {
       await disconnectFromWiFi();
-    }catch(e){
+    } catch (e) {
       print(e);
     }
-    try{
+    try {
       await FirebaseAuth.instance.signOut();
     } catch (e) {
       print(e);

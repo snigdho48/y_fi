@@ -1,5 +1,3 @@
-
-
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,7 +14,8 @@ class PhoneSigninController extends GetxController {
   void onInit() {
     super.onInit();
   }
-Future<UserCredential?> loginOrSignUp(String phoneNumber) async {
+
+  Future<UserCredential?> loginOrSignUp(String phoneNumber) async {
     final Completer<UserCredential?> completer = Completer();
 
     await _auth.verifyPhoneNumber(
@@ -45,9 +44,10 @@ Future<UserCredential?> loginOrSignUp(String phoneNumber) async {
 
     return completer.future; // Return the Future that completes later
   }
+
   Future<void> signInPhone(phone) async {
     final result = await loginOrSignUp(phone);
-    if (result!= null && result.user != null) {
+    if (result != null && result.user != null) {
       if (storage.read('deviceid') == null) {
         final result = await getDeviceInfo();
         storage.write('deviceid', result['device_id']);
@@ -71,6 +71,7 @@ Future<UserCredential?> loginOrSignUp(String phoneNumber) async {
       );
     }
   }
+
   @override
   void onReady() {
     super.onReady();

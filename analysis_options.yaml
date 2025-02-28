@@ -1,4 +1,8 @@
 include: package:flutter_lints/flutter.yaml
 linter:
   rules:
+    - unused_import
+    - unnecessary_lambdas
+    - avoid_unused_constructor_parameters
+
     

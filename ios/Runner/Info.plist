@@ -14,7 +14,7 @@
 			<string>com.yourcompany.wifiReconnect</string>
 		</array>
 		<key>CFBundleDisplayName</key>
-		<string>Free Y Fi</string>
+	<string>Y FI</string>
 		<key>CFBundleExecutable</key>
 		<string>$(EXECUTABLE_NAME)</string>
 		<key>CFBundleIdentifier</key>
@@ -22,7 +22,7 @@
 		<key>CFBundleInfoDictionaryVersion</key>
 		<string>6.0</string>
 		<key>CFBundleName</key>
-		<string>free_y_fi</string>
+	<string>Y FI</string>
 		<key>CFBundlePackageType</key>
 		<string>APPL</string>
 		<key>CFBundleShortVersionString</key>

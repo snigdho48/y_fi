@@ -63,8 +63,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '226170811222',
     projectId: 'free-y-fi',
     storageBucket: 'free-y-fi.firebasestorage.app',
-    iosClientId: '226170811222-allbpt4ao0ip82njo00ojhl3acriortj.apps.googleusercontent.com',
+    iosClientId:
+        '226170811222-allbpt4ao0ip82njo00ojhl3acriortj.apps.googleusercontent.com',
     iosBundleId: 'org.y-fi.freeYFi',
   );
-
 }

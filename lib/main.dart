@@ -16,9 +16,8 @@ import 'package:one_request/one_request.dart';
 
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-    String ssid = inputData?['ssid'] ?? ''; 
-    String password =
-        inputData?['password'] ?? ''; 
+    String ssid = inputData?['ssid'] ?? '';
+    String password = inputData?['password'] ?? '';
     if (task == 'show_notification') {
       showNotification("Disconnected", "The app is disconnected.");
     }
@@ -38,7 +37,7 @@ void callbackDispatcher() {
 }
 
 void main() async {
-    oneRequest.loadingconfig();
+  oneRequest.loadingconfig();
 
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
@@ -53,59 +52,53 @@ void main() async {
     isInDebugMode: false,
   );
 
-
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp, // Portrait mode up
     DeviceOrientation.portraitDown, // Portrait mode down
   ]).then((_) {
-  runApp(
-    GetMaterialApp(
-      title: "Application",
-      initialRoute: AppPages.INITIAL,
-      getPages: AppPages.routes,
-      builder: oneRequest.initLoading,
-      theme: ThemeData(
-        primaryColor: const Color(0xFF191B41),
-        primaryColorDark: const Color(0xFF191B41),
-        primaryColorLight: const Color(0xFF191B41),
-        scaffoldBackgroundColor: const Color(0xFF191B41),
-        textTheme: TextTheme(
-          bodySmall: TextStyle(
-            color: Colors.white,
+    runApp(
+      GetMaterialApp(
+        title: "Application",
+        initialRoute: AppPages.INITIAL,
+        getPages: AppPages.routes,
+        builder: oneRequest.initLoading,
+        theme: ThemeData(
+          primaryColor: const Color(0xFF191B41),
+          primaryColorDark: const Color(0xFF191B41),
+          primaryColorLight: const Color(0xFF191B41),
+          scaffoldBackgroundColor: const Color(0xFF191B41),
+          textTheme: TextTheme(
+            bodySmall: TextStyle(
+              color: Colors.white,
+            ),
+            bodyMedium: TextStyle(
+              color: Colors.white,
+            ),
+            bodyLarge: TextStyle(
+              color: Colors.white,
+            ),
+            displaySmall: TextStyle(
+              color: Colors.white,
+            ),
+            displayMedium: TextStyle(
+              color: Colors.white,
+            ),
+            displayLarge: TextStyle(
+              color: Colors.white,
+            ),
           ),
-          bodyMedium: TextStyle(
-            color: Colors.white,
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Color(0xFF191B41),
+            foregroundColor: Colors.white,
+            titleTextStyle: TextStyle(
+              color: Colors.white,
+            ),
           ),
-          bodyLarge: TextStyle(
-            color: Colors.white,
-          ),
-          displaySmall: TextStyle(
-            color: Colors.white,
-          ),
-          displayMedium: TextStyle(
-            color: Colors.white,
-          ),
-          displayLarge: TextStyle(
-            color: Colors.white,
-          ),
-
         ),
-        appBarTheme: const AppBarTheme(
-          backgroundColor:  Color(0xFF191B41),
-          foregroundColor: Colors.white,
-          titleTextStyle: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-
       ),
-
-    ),
-  );
+    );
   });
-   WidgetsBinding.instance.addPostFrameCallback((_) {
+  WidgetsBinding.instance.addPostFrameCallback((_) {
     FlutterNativeSplash.remove();
   });
 }
-
-

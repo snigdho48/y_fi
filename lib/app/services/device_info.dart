@@ -16,7 +16,6 @@ Future<Map<String, String>> getDeviceInfo() async {
     deviceName = androidInfo.model; // Device model
     brand = androidInfo.manufacturer; // Brand name (Samsung, Xiaomi, etc.)
     osVersion = "Android ${androidInfo.version.release}"; // OS version
-    
   } else if (Platform.isIOS) {
     final IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
     deviceId = iosInfo.identifierForVendor ?? "Unknown"; // Unique ID
