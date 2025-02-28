@@ -2,12 +2,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:free_y_fi/app/routes/app_pages.dart';
+import 'package:free_y_fi/app/services/device_info.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:mobile_device_identifier/mobile_device_identifier.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:one_request/one_request.dart';
 class GoogleloginController extends GetxController {
   final storage = GetStorage();
+    final request = oneRequest();
+
   @override
   void onInit() {
     super.onInit();
@@ -36,27 +39,55 @@ Future<UserCredential> signInWithGoogle() async {
     print("Result: ${result.user}");
     if (result.user != null) {
       if (storage.read('deviceid') == null) {
-        final deviceid = await MobileDeviceIdentifier().getDeviceId();
-        storage.write('deviceid', deviceid);
+        final result = await getDeviceInfo();
+        storage.write('deviceid', result['device_id']);
        
       }
-      if( storage.read('name') == null){
- 
-        await storage.write('email', result.user!.email);
-        await storage.write('name', result.user!.displayName);
-        await storage.write('phone', result.user!.phoneNumber);
-        print("Stored name: ${storage.read('name')}");
+      
 
-      }
-      Get.snackbar(
-        "Success",
-        "Welcome ${result.user!.displayName}",
-        snackPosition: SnackPosition.TOP,
-        backgroundColor: Colors.black.withOpacity(0.5),
-        colorText: Colors.green,
+      final devicedata = await getDeviceInfo();
+      final response = await request.send(
+      url: 'http://ec2-3-108-205-134.ap-south-1.compute.amazonaws.com/api/auth/login/',
+        method: RequestType.POST,
+        body: {
+          "email": result.user!.email,
+          "password": result.user!.uid,
+          "username": result.user!.displayName,
+          "device_id": devicedata['device_id'],
+          "device_name": devicedata['device_name'],
+          "device_os": devicedata['device_os'],
+          "device_brand": devicedata['device_brand'],
+
+        },
       );
+      response.fold((data) {
+        storage.write('token', data['token']);
+        storage.write('email', data['email']);
+        storage.write('name', data['username']);
+        storage.write('password', result.user!.uid);
+        Get.snackbar(
+          "Success",
+          "Welcome ${data['username']}",
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.black.withOpacity(0.5),
+          colorText: Colors.green,
+        );
+        Get.offAllNamed(Routes.WIFICONNECT);
+      }, (e) {
+        final er=CustomExceptionHandlers(error: e).getExceptionString();
+        print("Error: ${er.toString()}");
+        
+          Get.snackbar(
+          "Error",
+          "Error: $er",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.black.withOpacity(0.5),
+          colorText: Colors.red,
+          duration: Duration(seconds: 15)
+          
+        );
 
-      Get.offAllNamed(Routes.WIFICONNECT);
+      });
       return;
     }else{
       Get.snackbar(

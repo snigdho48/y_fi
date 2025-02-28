@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import '../controllers/wificonnect_controller.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
@@ -20,10 +21,12 @@ class WificonnectView extends GetView<WificonnectController> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Obx(() {
-                  if (controller.isConnected.value) {
+                  if (!controller.isLoading.value) {
                     return IconButton(
                   onPressed: () {
-                    
+                    if(controller.isConnected.value){
+                       controller.disconnectWiFi2();
+                    }
                    controller.signOut();
                   },
                   icon: Icon(Icons.logout, color: Colors.white),
@@ -156,11 +159,9 @@ class WificonnectView extends GetView<WificonnectController> {
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white),
                                   ),
-                      
-                    
                             ],
                           ),
-                          
+
                           Text(
                            controller.isRun.value
                                       ? 'Session Expired'
@@ -174,16 +175,13 @@ class WificonnectView extends GetView<WificonnectController> {
                         ],
                       )
                     );
-                     
-                   }),
-                     
+                    }),
                       SizedBox(height: 20),
                       Obx(()  {
-                        if (controller.qrCodeResult.isEmpty)
+                        if (controller.venu.value.isEmpty)
                         {
                           return const SizedBox.shrink();
                         }
-                        
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -205,13 +203,12 @@ class WificonnectView extends GetView<WificonnectController> {
                               text: controller.qrCodeResult.isEmpty
                                   ? ""
                                   : controller.isConnected.value
-                                      ? controller.ssidController.text
+                                      ? controller.venu.value
                                       : controller.isRun.value
                                           ? 'Your Session Expired'
                                           : controller.ssidController.text,
                               style: TextStyle(
                                 fontSize: Get.width * .05,
-                               
                               ),
                             )),
                           ],
@@ -219,24 +216,21 @@ class WificonnectView extends GetView<WificonnectController> {
                       ),
                       SizedBox(height: Get.height*.02),
                       Obx(() {
-                        if (controller.qrCodeResult.isEmpty) {
+                        if (controller.venu.value.isEmpty) {
                           return const SizedBox.shrink();
                         }
                         return ElevatedButton(
-                          
                           onPressed: controller.isConnected.value 
                               ? controller.disconnectWiFi2
                               : controller.startloadingTimer,
                               style: ElevatedButton.styleFrom(
                                 minimumSize:  Size(Get.width *.5, 60),
                                 maximumSize: Size(Get.width *.75, 60),
-                              
                                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 shadowColor: Colors.black,
-                                
                                 elevation: 5,
                                 side: const BorderSide(
                                   color: Colors.black,
@@ -294,7 +288,6 @@ class WificonnectView extends GetView<WificonnectController> {
                           )
                         );
                       }),
-                      
                     ],
                   ),
                 ),
@@ -302,7 +295,7 @@ class WificonnectView extends GetView<WificonnectController> {
             ),
           ),
           Obx((){
-            if(!controller.isConnected.value || !controller.isRun.value){
+            if(!controller.isConnected.value){
               return     Positioned(
             bottom: 0,
             left: 0,
@@ -324,7 +317,7 @@ class WificonnectView extends GetView<WificonnectController> {
             return const SizedBox(height: 0,);
           }),
           Obx(() {
-            if (controller.isConnected.value && !controller.isRun.value) {
+            if (controller.isConnected.value) {
               return Positioned(
                 bottom: 0,
                 left: 0,
@@ -359,8 +352,99 @@ class WificonnectView extends GetView<WificonnectController> {
                     color: Color(0xFF191B41),
                     height: Get.height,
                     width: Get.width,
-                    child: const Center(
-                      child: CircularProgressIndicator(),
+                    child:  Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                       
+                       
+                      
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            spacing: 5,
+                            children: [
+                              RichText(
+                                  text: TextSpan(
+                                text: 'Connecting To',
+                                style: TextStyle(
+                                  fontSize: Get.width * .05,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.lightGreenAccent,
+                                ),
+                              )),
+                              RichText(
+                                  text: TextSpan(
+                                text: 'Free Y-Fi',
+                                style: TextStyle(
+                                  fontSize: Get.width * .05,
+                                ),
+                              )),
+                            ],
+                          ),
+                          SizedBox(height: Get.height*.03),
+                          Container(
+                            width: Get.width,
+                            height: Get.height *1400/1920,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: Colors.lightGreenAccent,
+                            ),
+                            child: Text(
+                              'Ad 1080x1400',
+                              style: TextStyle(color: Colors.black, fontSize: 20),
+                            ),
+                          ),
+                          Expanded(child: Padding(
+                            padding:  EdgeInsets.symmetric(horizontal: Get.width*.1),  
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      'Ad Ends in: ',
+                                      style: TextStyle(
+                                        fontSize: Get.width * .05,
+                                        fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      ),
+                                    ),
+                                    Obx(()=>Container(
+                                      constraints: BoxConstraints(
+                                        minWidth: Get.width * .06                                  ),
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        '${controller.loadingCount.value}',
+                                        
+                                        style: TextStyle(
+                                          fontSize: Get.width * .05,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.lightGreenAccent,
+                                        ),),
+                                    ),),
+                                       Text(
+                                      'Sec',
+                                      style: TextStyle(
+                                        fontSize: Get.width * .05,
+                                        fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                            
+                                Icon(
+                                  FontAwesomeIcons.clock,
+                                  color: Colors.lightGreenAccent,
+                                )                            
+                                ],
+                            ),
+                          ))
+                        ],
+                      ),
                     ),
                   ),
                 ),

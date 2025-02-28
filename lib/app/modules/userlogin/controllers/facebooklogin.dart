@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:free_y_fi/app/routes/app_pages.dart';
+import 'package:free_y_fi/app/services/device_info.dart';
 import 'package:get/get.dart';
-import 'package:mobile_device_identifier/mobile_device_identifier.dart';
 import 'package:get_storage/get_storage.dart';
 class FacebookloginController extends GetxController {
   final storage = GetStorage();
@@ -51,8 +51,8 @@ class FacebookloginController extends GetxController {
     final result=await signInWithFacebook();
     if(result != null && result.user!=null){
            if (storage.read('deviceid') == null) {
-        final deviceid = await MobileDeviceIdentifier().getDeviceId();
-        await storage.write('deviceid', deviceid);
+        final result = await getDeviceInfo();
+        await storage.write('deviceid', result['device_id']);
        
       }
       if( storage.read('name') == null){

@@ -5,9 +5,9 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:free_y_fi/app/routes/app_pages.dart';
+import 'package:free_y_fi/app/services/device_info.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:mobile_device_identifier/mobile_device_identifier.dart';
 
 class PhoneSigninController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -49,8 +49,8 @@ Future<UserCredential?> loginOrSignUp(String phoneNumber) async {
     final result = await loginOrSignUp(phone);
     if (result!= null && result.user != null) {
       if (storage.read('deviceid') == null) {
-        final deviceid = await MobileDeviceIdentifier().getDeviceId();
-        storage.write('deviceid', deviceid);
+        final result = await getDeviceInfo();
+        storage.write('deviceid', result['device_id']);
       }
       if (storage.read('name') == null) {
         await storage.write('email', result.user!.email);

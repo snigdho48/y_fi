@@ -59,8 +59,9 @@ class UserloginView extends GetView<UserloginController> {
                       ],
                     ),
                     SizedBox(height: Get.height * 0.02),
-                    Image.asset('assets/icon/app_logo.png'),
-                    SizedBox(height: Get.height * 0.07),
+                    Image.asset('assets/icon/app_logo.png', height: Get.height * 0.2),
+                                        SizedBox(height: Get.height * 0.02),
+
         //             TextFormField(
         //               textAlign: TextAlign.center,
         //               style: TextStyle(

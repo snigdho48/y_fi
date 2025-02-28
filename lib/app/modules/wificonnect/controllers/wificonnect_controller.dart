@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:free_y_fi/app/modules/notifications/notifications.dart';
+import 'package:free_y_fi/app/services/device_info.dart';
 import 'package:get/get.dart';
+import 'package:one_request/one_request.dart';
 import 'package:wifi_iot/wifi_iot.dart';
 import 'dart:async';
 import 'package:permission_handler/permission_handler.dart';
@@ -12,14 +14,17 @@ import 'package:get_storage/get_storage.dart';
 
 class WificonnectController extends GetxController {
   RxBool isConnected = false.obs;
+  final request = oneRequest();
   RxBool isConnecting = false.obs;
   RxInt remainingTime = 0.obs; 
-  final disconnectTime = 10;
+  final disconnectTime = 30*60;
   Timer? disconnectTimer;
   RxBool isRun = false.obs;
   Timer? loadingtimer;
+  RxBool connectFirstTime = true.obs;
   Timer? connectivityMonitor;
   RxBool isConnectedViaApp = false.obs;
+  final ip = ''.obs;
   final qrCodeResult = ''.obs;
   var result = Rxn<Barcode>();
   QRViewController? controller;
@@ -28,23 +33,29 @@ class WificonnectController extends GetxController {
   final localStorage = GetStorage();
   final isLoading = false.obs;
   final loadingCount = 0.obs;
+  final venu = ''.obs;
+  final venuuuid = 0.obs;
+  final isFirstTime = true.obs;
   TextEditingController ssidController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   @override
   void onInit() {
+
     super.onInit();
     requestPermissions();
     monitorWiFiStatus();
     jsonList.value=[
       {
       'code': 'code1',
+      'venu':'Office',
       "ssid": "A Maze Venture",
       "password": "Amaze@2024#"
     },
-      {'code': 'code2', "ssid": "Snigdho_5G", "password": "22292646"},
-      {'code': 'code3', "ssid": "Sayed family", "password": "yameen2012"},
-      {'code': 'code4', "ssid": "AirStation", "password": "03070809"},
+      {'code': 'code2','venu':'MY Home', "ssid": "Snigdho_5G", "password": "22292646"},
+      {'code': 'code3','venu':"Vai's Home",  "ssid": "Sayed family", "password": "yameen2012"},
+      {'code': 'code4','venu':"Vai's Office",
+       "ssid": "AirStation", "password": "03070809"},
     ];
     
   }
@@ -215,10 +226,20 @@ remainingTime.value = disconnectTime;
       security: NetworkSecurity.WPA,
       withInternet: true,
     );
-
+    if (!connectionStarted){
+      
+      await Future.delayed(Duration(seconds:2),()async{
+        connectionStarted = await WiFiForIoTPlugin.connect(
+        ssid,
+        password: password,
+        security: NetworkSecurity.WPA,
+        withInternet: true,
+        );
+      });
+    }
     if (connectionStarted) {
       print("✅ WiFi connection started");
-
+        localStorage.write('venu',venu.value );
         localStorage.write('ssid', ssid);
         localStorage.write('password', password);
 
@@ -257,22 +278,63 @@ remainingTime.value = disconnectTime;
 
 
   /// Starts countdown timer for disconnecting WiFi
-  void startDisconnectTimer() {
+  void startDisconnectTimer() async {
     disconnectTimer?.cancel();
+    getDeviceInfo().then((value) {
+      if(connectFirstTime.value){
+        ip.value = value['ip'] ?? '';
+        connectFirstTime.value = false;
+      }
+       request.send(
+          url:
+              "http://ec2-3-108-205-134.ap-south-1.compute.amazonaws.com/api/data/collect/",
+          method: RequestType.POST,
+          body: {
+            "device_id": value['device_id'],
+            "device_name": value['device_name'],
+            "device_os": value['device_os'],
+            "device_brand": value['device_brand'],
+            "partner": venuuuid.value,
+            'ip':ip.value
+          },
+          header: {
+            'Authorization': 'Bearer ${localStorage.read('token')}'
+          }).then((value) => value.fold((data) {
+            print(data);
+          }, (er) {
+            print(er.toString());
+          }));
+    });
+   
+    
 
-
+    isConnected.value = true;
     disconnectTimer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (remainingTime.value > 0) {
         remainingTime.value--;
       } else {
         disconnectWiFi();
         timer.cancel();
+        isConnected.value = false;
         isRun.value = true;
       }
     });
   }
-    void startloadingTimer() {
-      print('started');
+    void startloadingTimer() async{
+      if(localStorage.read('isFirstTime') == null){
+        localStorage.write('isFirstTime', false);
+        isFirstTime.value = false;
+        await WiFiForIoTPlugin.connect(
+        ssidController.text.trim(),
+        password: passwordController.text.trim(),
+        security: NetworkSecurity.WPA,
+        withInternet: true,
+      );
+
+      }else{
+        isFirstTime.value = localStorage.read('isFirstTime');
+      }
+      
       isRun.value = false;
     loadingtimer?.cancel();
     loadingCount.value = 20;
@@ -318,6 +380,7 @@ Future<void> disconnectFromWiFi() async {
 
       isConnecting.value = false;
       isConnectedViaApp.value = false;
+      isConnected.value = false;  
       disconnectTimer?.cancel();
       controller?.resumeCamera();
       Get.snackbar(backgroundColor: Colors.black.withOpacity(0.5),"Disconnected", "WiFi disconnected.",titleText: Text("Disconnected",style: TextStyle(color: Colors.green,fontSize:18),),messageText: Text("WiFi disconnected.",style: TextStyle(color: Colors.green),));
@@ -330,7 +393,17 @@ Future<void> disconnectFromWiFi() async {
     try {
       if (await WiFiForIoTPlugin.isConnected()) {
         bool isDisconnected = await WiFiForIoTPlugin.disconnect();
+        
         remainingTime.value = 0;
+        venu.value = '';
+        venuuuid.value = 0;
+        ssidController.text = '';
+        passwordController.text = '';
+        isConnecting.value = false;
+        isConnectedViaApp.value = false;
+        connectFirstTime.value = true;
+        isConnected.value = false;
+        disconnectTimer?.cancel();
         print("WiFi disconnected: $isDisconnected");
 
         if (!isDisconnected) {
@@ -366,26 +439,46 @@ Future<void> disconnectFromWiFi() async {
 
   void onQRViewCreated(QRViewController qrController) {
     controller = qrController;
-    qrController.scannedDataStream.listen((scanData) {
+    qrController.scannedDataStream.listen((scanData) async {
       qrCodeResult.value = scanData.code ?? '';
       result.value = scanData;
       if (qrCodeResult.isNotEmpty) {
-        var data = jsonList.firstWhere(
-          (element) => element['code'] == qrCodeResult.value,
-          orElse: () => {'ssid': '', 'password': ''},
-        );
-        if (data.isNotEmpty) {
+        stopScanning();
+        print("QR Code Result: ${qrCodeResult.value}");
+        var response = await request.send(url:'http://ec2-3-108-205-134.ap-south-1.compute.amazonaws.com/api/venue/data/' , method: RequestType.POST, body: {
+          'code': qrCodeResult.value
+        },
+        header: {
+          'Authorization': 'Bearer ${localStorage.read('token')}'
+        });
+        
+
+        response.fold(
+          (data) {
+            print(data);
           ssidController.text = data['ssid']!;
           passwordController.text = data['password']!;
-        }
-        else{
+          venu.value = data['venue_name']!;
+          venuuuid.value = data['id']!;
+          
+          },
+          (er) {
           Get.snackbar(
-              backgroundColor: Colors.black.withOpacity(0.7),
-              "Error", "Invalid QR Code",titleText:Text("Error",style: TextStyle(color: Colors.red,fontSize: 18),),messageText: Text("Invalid QR Code",style: TextStyle(color: Colors.red),));
-        }
+          "Error",
+          "Error: $er",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.black.withOpacity(0.5),
+          colorText: Colors.red,
+          duration: Duration(seconds: 15)
+          
+        );
+
+          
+          }
+        );
+       
 
    
-        stopScanning();
       }
     });
   }
@@ -405,6 +498,7 @@ Future<void> disconnectFromWiFi() async {
     await localStorage.remove('name');
     await localStorage.remove('email');
     await localStorage.remove('phone');
+    await localStorage.remove('venu');
     Get.offAllNamed('/home');
   }
 
@@ -414,6 +508,7 @@ Future<void> disconnectFromWiFi() async {
     passwordController.dispose();
     disconnectTimer?.cancel();
     connectivityMonitor?.cancel();
+    localStorage.remove('isFirstTime');
     controller?.dispose();
     super.onClose();
   }

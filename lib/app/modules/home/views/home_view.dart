@@ -38,13 +38,9 @@ class HomeView extends GetView<HomeController> {
                            crossAxisAlignment: CrossAxisAlignment.center,
                            
                            children: <Widget>[
-                Image.asset('assets/icon/app_logo.png'),
+                Image.asset('assets/icon/logo.png'),
                 SizedBox(height: Get.height * 0.02),
-                 Text(
-                  'Free Y-Fi',
-                  style: TextStyle(fontSize: Get.width*.1, fontWeight: FontWeight.bold, color: Colors.lightGreenAccent),
-                ),
-                SizedBox(height: Get.height * 0.02),
+                
                RichText(text: 
                TextSpan(
                 text: 'Connect - Engage - Earn',

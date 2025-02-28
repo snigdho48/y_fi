@@ -43,7 +43,6 @@ dependencies:
   qr_code_scanner_plus: ^2.0.10+1
   one_request: ^1.0.3
   geolocator: ^13.0.2
-  flutter_launcher_icons: ^0.14.3
   flutter_local_notifications: ^18.0.1
   get_storage: ^2.1.1
   path_provider: ^2.1.2
@@ -52,13 +51,17 @@ dependencies:
   google_sign_in: ^6.2.2
   firebase_auth: ^5.5.0
   flutter_facebook_auth: ^7.1.1
-  mobile_device_identifier: ^0.0.3
+  device_info_plus: ^11.3.0
+  dart_ipify: ^1.1.1
+
 
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.14.3
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -111,21 +114,21 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
 
-flutter_icons:
-  android: true
+flutter_launcher_icons:
+  android: "launcher_icon"
   ios: true
-  image_path: "assets/icon/app_logo.png" # Change this to your logo path
-  adaptive_icon_foreground: "assets/icon/app_logo.png"
-  adaptive_icon_background: "#ffffff"
+  image_path: "assets/icon/app_logo.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+
 flutter_native_splash:
   color: "#191B41"
-  background_image: "assets/icon/app_logo.png"
-  image:  "assets/icon/app_logo.png"
+  background_image: "assets/icon/logo.png"
+  image:  "assets/icon/logo.png"
   android: true
   ios: true
   android_gravity: "center"
   ios_content_mode: "scaleToFill"
   android_12:
-    background_image: "assets/icon/app_logo.png"
-    image:  "assets/icon/app_logo.png"
+    background_image: "assets/icon/logo.png"
+    image:  "assets/icon/logo.png"
     icon_background_color: "#191B41"
