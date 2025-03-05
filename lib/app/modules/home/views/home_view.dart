@@ -37,7 +37,7 @@ class HomeView extends GetView<HomeController> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Image.asset('assets/icon/logo.png'),
+                Image.asset('assets/icon/logo.png',width: Get.width*.6,),
                 SizedBox(height: Get.height * 0.02),
                 RichText(
                     text: TextSpan(

@@ -9,6 +9,7 @@ class UserloginController extends GetxController {
   //TODO: Implement UserloginController
   final Rx<TextEditingController> emailController = TextEditingController().obs;
   final Rx<bool> isCheck = false.obs;
+  final Rx<bool> userLogin = false.obs;
   final google = Get.put(GoogleloginController());
   // final fb = Get.put(FacebookloginController());
   final phone = Get.put(PhoneSigninController());
@@ -62,10 +63,11 @@ class UserloginController extends GetxController {
   }
 
   void login() {
-    final text = emailController.value.text;
-    if (text.length == 11 && isValidPhoneNumber(text)) {
-      phone.signInPhone('+88$text');
-    }
+    // final text = emailController.value.text;
+    // if (text.length == 11 && isValidPhoneNumber(text)) {
+    //   phone.signInPhone('+88$text');
+    // }
+    userLogin.value = true;
   }
 
   bool isValidPhoneNumber(String? phoneNumber) {

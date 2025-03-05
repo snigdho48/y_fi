@@ -15,6 +15,9 @@ class UserloginView extends GetView<UserloginController> {
         child: Stack(
           children: [
             // Scrollable Content
+           
+
+           
             SingleChildScrollView(
               child: SizedBox(
                 width: Get.width,
@@ -60,7 +63,7 @@ class UserloginView extends GetView<UserloginController> {
                     ),
                     SizedBox(height: Get.height * 0.02),
                     Image.asset('assets/icon/app_logo.png',
-                        height: Get.height * 0.2),
+                        width: Get.width*.5,),
                     SizedBox(height: Get.height * 0.02),
 
                     //             TextFormField(
@@ -127,224 +130,255 @@ class UserloginView extends GetView<UserloginController> {
                     //   ),
                     // ),SizedBox(height: Get.height * 0.04),
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      spacing: 10,
-                      children: [
-                        RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: 'Login With',
-                                style: TextStyle(
-                                  fontSize: Get.width * 0.05,
-                                  fontWeight: FontWeight.normal,
-                                  height: 1.5,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        // SizedBox(width: Get.width * 0.04),
-
-                        //   Column(
-                        //                 children: [
-                        //                   IconButton(
-                        //                     icon: FaIcon(FontAwesomeIcons.envelope,
-                        //                       color: Color(0xFF191B41),
-                        //                       size: 18,
-                        //                     ),
-                        //                      style: ButtonStyle(
-                        //                       backgroundColor:
-                        //                           MaterialStateProperty.all(Colors.white),
-                        //                     ),
-                        //                     onPressed: () {
-
-                        //                     },
-                        //                   ),
-                        //                   Text('Email', style: TextStyle(
-                        //                           fontSize: 10,
-                        //                           color: Colors.lightGreenAccent)),
-                        //                 ],
-                        //               ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          spacing: 20,
+                    Obx(
+                      ()=>  AnimatedOpacity(
+                        opacity: controller.userLogin.value ? 1 : 0,
+                        duration: Duration(milliseconds: 300),
+                        
+                        
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          spacing: 10,
                           children: [
-                            //  Column(
-                            //                   children: [
-                            //                     IconButton(
-                            //                       icon: FaIcon(
-                            //                         FontAwesomeIcons.facebook,
-                            //                         color: Color(0xFF191B41),
-                            //                         size: 18,
-                            //                       ),
-                            //                       style: ButtonStyle(
-                            //                         backgroundColor:
-                            //                             MaterialStateProperty.all(Colors.white),
-                            //                       ),
-                            //                       onPressed: () {
-                            //                         controller.loginWithFacebook();
-                            //                       },
-                            //                     ),
-                            //                     Text('facebook',
-                            //                         style: TextStyle(
-                            //                             fontSize: 10,
-                            //                             color: Colors.lightGreenAccent)),
-                            //                   ],
-                            //                 ),
-                            Column(
-                              children: [
-                                IconButton(
-                                  icon: FaIcon(
-                                    FontAwesomeIcons.google,
-                                    color: Color(0xFF191B41),
-                                    size: 18,
-                                  ),
-                                  style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.all(Colors.white),
-                                  ),
-                                  onPressed: () {
-                                    controller.loginWithGoogle();
-                                  },
-                                ),
-                                Text('Google',
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: 'Login With',
                                     style: TextStyle(
-                                        fontSize: 10,
-                                        color: Colors.lightGreenAccent)),
-                              ],
+                                      fontSize: Get.width * 0.05,
+                                      fontWeight: FontWeight.normal,
+                                      height: 1.5,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
+                            // SizedBox(width: Get.width * 0.04),
+                        
+                            //   Column(
+                            //                 children: [
+                            //                   IconButton(
+                            //                     icon: FaIcon(FontAwesomeIcons.envelope,
+                            //                       color: Color(0xFF191B41),
+                            //                       size: 18,
+                            //                     ),
+                            //                      style: ButtonStyle(
+                            //                       backgroundColor:
+                            //                           MaterialStateProperty.all(Colors.white),
+                            //                     ),
+                            //                     onPressed: () {
+                        
+                            //                     },
+                            //                   ),
+                            //                   Text('Email', style: TextStyle(
+                            //                           fontSize: 10,
+                            //                           color: Colors.lightGreenAccent)),
+                            //                 ],
+                            //               ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              spacing: 20,
+                              children: [
+                                //  Column(
+                                //                   children: [
+                                //                     IconButton(
+                                //                       icon: FaIcon(
+                                //                         FontAwesomeIcons.facebook,
+                                //                         color: Color(0xFF191B41),
+                                //                         size: 18,
+                                //                       ),
+                                //                       style: ButtonStyle(
+                                //                         backgroundColor:
+                                //                             MaterialStateProperty.all(Colors.white),
+                                //                       ),
+                                //                       onPressed: () {
+                                //                         controller.loginWithFacebook();
+                                //                       },
+                                //                     ),
+                                //                     Text('facebook',
+                                //                         style: TextStyle(
+                                //                             fontSize: 10,
+                                //                             color: Colors.lightGreenAccent)),
+                                //                   ],
+                                //                 ),
+                                Column(
+                                  children: [
+                                    IconButton(
+                                      icon: FaIcon(
+                                        FontAwesomeIcons.google,
+                                        color: Color(0xFF191B41),
+                                        size: 18,
+                                      ),
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(Colors.white),
+                                      ),
+                                      onPressed: () {
+                                        controller.loginWithGoogle();
+                                      },
+                                    ),
+                                    Text('Google',
+                                        style: TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.lightGreenAccent)),
+                                  ],
+                                ),
+                              ],
+                            )
                           ],
-                        )
-                      ],
+                        ),
+                      ),
                     ),
 
                     SizedBox(height: Get.height * 0.02),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      spacing: 5,
-                      children: [
-                        Obx(
-                          () => Transform.scale(
-                            scale: 1.5, // Scales the checkbox
-                            child: Checkbox(
-                              value: controller.isCheck.value,
-                              onChanged: (value) {
-                                controller.isCheck.value = value ??
-                                    false; // Toggle the value on change
-                              },
-                              activeColor: Colors
-                                  .lightGreenAccent, // The color when checked
-                              checkColor: Color(
-                                  0xFF191B41), // The color of the checkmark
-                              fillColor: controller.isCheck.value
-                                  ? MaterialStateProperty.all(
-                                      Colors.lightGreenAccent)
-                                  : null, // The color when unchecked
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              side: BorderSide(
-                                  color: Colors
-                                      .white), // Border color of the checkbox
-                            ),
-                          ),
-                        ),
-
-                        // This makes the text take up the remaining space
-                        RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: 'Click to accept',
-                                style: TextStyle(
-                                  fontSize: Get.width * 0.04,
-                                  fontWeight: FontWeight.normal,
-                                  height: 1.5,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        RichText(
-                          textAlign: TextAlign.center,
-                          text: TextSpan(
-                            text:
-                                'Terms & Conditions', // Adds some extra space between the text and underline
-                            style: TextStyle(
-                              fontSize: Get.width * 0.04,
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration
-                                  .underline, // Underline the text
-                              decorationColor: Colors
-                                  .white, // Optional: Set the underline color
-                              decorationStyle:
-                                  TextDecorationStyle.solid, // Solid underline
-                              decorationThickness: 1,
-                              height:
-                                  1.5, // This adjusts the vertical spacing for the underline
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
+                    Obx(
+                       ()=>  AnimatedOpacity(
+                         opacity: controller.userLogin.value ? 1 : 0,
+                         duration: Duration(milliseconds: 300),
+                                                
+                       child: Row(
+                         mainAxisAlignment: MainAxisAlignment.center,
+                         spacing: 5,
+                         children: [
+                           Obx(
+                             () => Transform.scale(
+                               scale: 1.5, // Scales the checkbox
+                               child: Checkbox(
+                                 value: controller.isCheck.value,
+                                 onChanged: (value) {
+                                   controller.isCheck.value = value ??
+                                       false; // Toggle the value on change
+                                 },
+                                 activeColor: Colors
+                                     .lightGreenAccent, // The color when checked
+                                 checkColor: Color(
+                                     0xFF191B41), // The color of the checkmark
+                                 fillColor: controller.isCheck.value
+                                     ? MaterialStateProperty.all(
+                                         Colors.lightGreenAccent)
+                                     : null, // The color when unchecked
+                                 shape: RoundedRectangleBorder(
+                                   borderRadius: BorderRadius.circular(5),
+                                 ),
+                                 side: BorderSide(
+                                     color: Colors
+                                         .white), // Border color of the checkbox
+                               ),
+                             ),
+                           ),
+                       
+                           // This makes the text take up the remaining space
+                           RichText(
+                             text: TextSpan(
+                               children: [
+                                 TextSpan(
+                                   text: 'Click to accept',
+                                   style: TextStyle(
+                                     fontSize: Get.width * 0.04,
+                                     fontWeight: FontWeight.normal,
+                                     height: 1.5,
+                                   ),
+                                 ),
+                               ],
+                             ),
+                           ),
+                       
+                           RichText(
+                             textAlign: TextAlign.center,
+                             text: TextSpan(
+                               text:
+                                   'Terms & Conditions', // Adds some extra space between the text and underline
+                               style: TextStyle(
+                                 fontSize: Get.width * 0.04,
+                                 fontWeight: FontWeight.bold,
+                                 decoration: TextDecoration
+                                     .underline, // Underline the text
+                                 decorationColor: Colors
+                                     .white, // Optional: Set the underline color
+                                 decorationStyle:
+                                     TextDecorationStyle.solid, // Solid underline
+                                 decorationThickness: 1,
+                                 height:
+                                     1.5, // This adjusts the vertical spacing for the underline
+                               ),
+                             ),
+                           )
+                         ],
+                       ),
+                                            ),
+                       ),
                     SizedBox(height: Get.height * 0.03),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        // SizedBox(
-                        //   width: Get.width * 0.37,
-                        //   height: Get.height * 0.05,
-                        //   child: ElevatedButton(
-                        //     onPressed: controller.login,
-
-                        //     child: Text('User Login', style: TextStyle(fontSize: Get.width*.05,color: Color(0xFF191B41)),),
-                        //     style: ButtonStyle(
-
-                        //       backgroundColor: MaterialStateProperty.all(
-                        //         Colors.lightGreenAccent,
-                        //       ),
-                        //       shape: MaterialStateProperty.all(
-                        //         RoundedRectangleBorder(
-                        //           borderRadius: BorderRadius.circular(40),
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
-
-                        // SizedBox(
-                        //     width: Get.width * 0.37,
-                        //   height: Get.height * 0.05,
-                        //   child: ElevatedButton(
-                        //     onPressed: () {},
-                        //     child: Text(
-                        //       'Partner Login',
-                        //       style: TextStyle(
-                        //           fontSize: Get.width*.05, color: Color(0xFF191B41)),
-                        //     ),
-                        //     style: ButtonStyle(
-                        //       backgroundColor: MaterialStateProperty.all(
-                        //         Colors.lightGreenAccent,
-                        //       ),
-                        //       shape: MaterialStateProperty.all(
-                        //         RoundedRectangleBorder(
-                        //           borderRadius: BorderRadius.circular(40),
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
-                      ],
-                    )
+                   
                   ],
                 ),
               ),
             ),
-
+ Obx(
+                      () => AnimatedPositioned(
+                        duration: Duration(milliseconds: 300),
+                        top: controller.userLogin.value
+                            ? Get.height * .8
+                            : Get.height * 0.45,
+                            child: AnimatedOpacity(
+                              opacity: !controller.userLogin.value ? 1 : 0,
+                              duration: Duration(milliseconds: 300),
+                          child: SizedBox(
+                            width: Get.width,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                SizedBox(
+                                  width: Get.width * 0.37,
+                                  height: Get.height * 0.05,
+                                  child: ElevatedButton(
+                                    onPressed: controller.login,
+                                    
+                            
+                                    child: Text('User Login', style: TextStyle(fontSize: Get.width*.05,color: Color(0xFF191B41)),),
+                                    style: ButtonStyle(
+                            
+                                      backgroundColor: MaterialStateProperty.all(
+                                        Colors.lightGreenAccent,
+                                      ),
+                                      shape: MaterialStateProperty.all(
+                                        RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(40),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            
+                                SizedBox(
+                                    width: Get.width * 0.37,
+                                  height: Get.height * 0.05,
+                                  child: ElevatedButton(
+                                    onPressed: () {},
+                                    child: Text(
+                                      'Partner Login',
+                                      style: TextStyle(
+                                          fontSize: Get.width*.05, color: Color(0xFF191B41)),
+                                    ),
+                                    style: ButtonStyle(
+                                      backgroundColor: MaterialStateProperty.all(
+                                        Colors.lightGreenAccent,
+                                      ),
+                                      shape: MaterialStateProperty.all(
+                                        RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(40),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
             // Fixed Positioned Banner
             Positioned(
               bottom: 0,
@@ -365,6 +399,23 @@ class UserloginView extends GetView<UserloginController> {
                       'Ad 1080x200',
                       style: TextStyle(color: Colors.white, fontSize: 20),
                     ),
+                  ),
+                ),
+              ),
+            ),
+             Obx(
+              () => Positioned(
+                top: Get.height * 0.05,
+                left: Get.width * 0.02,
+                child: AnimatedOpacity(
+                  opacity: controller.userLogin.value ? 1 : 0,
+                  duration: Duration(milliseconds: 300),
+                  child: IconButton(
+                    icon: Icon(Icons.arrow_back_ios,
+                        color: Colors.white, size: Get.width * 0.05),
+                    onPressed: () {
+                      controller.userLogin.value = false;
+                    },
                   ),
                 ),
               ),

@@ -45,6 +45,7 @@ class GoogleloginController extends GetxController {
       }
 
       final devicedata = await getDeviceInfo();
+      print('${baseurl}auth/login/');
       final response = await request.send(
         url: '${baseurl}auth/login/',
         method: RequestType.POST,
