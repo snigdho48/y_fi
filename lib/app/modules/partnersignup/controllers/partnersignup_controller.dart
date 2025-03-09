@@ -116,6 +116,7 @@ class PartnersignupController extends GetxController {
         storage.write('token', data['token']);
         storage.write('email', data['email']);
         storage.write('name', data['username']);
+        storage.write('group_name', data['group_name']);
         Get.snackbar(
           "Success",
           "Welcome ${data['username']}",
@@ -123,7 +124,7 @@ class PartnersignupController extends GetxController {
           backgroundColor: Colors.black.withOpacity(0.5),
           colorText: Colors.green,
         );
-        Get.offAllNamed(Routes.WIFICONNECT);
+        Get.offAllNamed(Routes.PARTNERDASHBOARD);
       }, (er) {
         print("Error: ${er}");
 

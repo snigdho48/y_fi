@@ -65,6 +65,8 @@ class GoogleloginController extends GetxController {
         storage.write('email', data['email']);
         storage.write('name', data['username']);
         storage.write('password', result.user!.uid);
+        storage.write('group_name', data['group_name']);
+
         Get.snackbar(
           "Success",
           "Welcome ${data['username']}",

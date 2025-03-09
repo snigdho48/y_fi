@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
+import '../modules/partnerdashboard/bindings/partnerdashboard_binding.dart';
+import '../modules/partnerdashboard/views/partnerdashboard_view.dart';
 import '../modules/partnerlogin/bindings/partnerlogin_binding.dart';
 import '../modules/partnerlogin/views/partnerlogin_view.dart';
 import '../modules/partnersignup/bindings/partnersignup_binding.dart';
@@ -43,6 +45,11 @@ class AppPages {
       name: _Paths.PARTNERSIGNUP,
       page: () => const PartnersignupView(),
       binding: PartnersignupBinding(),
+    ),
+    GetPage(
+      name: _Paths.PARTNERDASHBOARD,
+      page: () => const PartnerdashboardView(),
+      binding: PartnerdashboardBinding(),
     ),
   ];
 }

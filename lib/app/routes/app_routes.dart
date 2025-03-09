@@ -8,6 +8,7 @@ abstract class Routes {
   static const USERLOGIN = _Paths.USERLOGIN;
   static const PARTNERLOGIN = _Paths.PARTNERLOGIN;
   static const PARTNERSIGNUP = _Paths.PARTNERSIGNUP;
+  static const PARTNERDASHBOARD = _Paths.PARTNERDASHBOARD;
 }
 
 abstract class _Paths {
@@ -17,4 +18,5 @@ abstract class _Paths {
   static const USERLOGIN = '/userlogin';
   static const PARTNERLOGIN = '/partnerlogin';
   static const PARTNERSIGNUP = '/partnersignup';
+  static const PARTNERDASHBOARD = '/partnerdashboard';
 }

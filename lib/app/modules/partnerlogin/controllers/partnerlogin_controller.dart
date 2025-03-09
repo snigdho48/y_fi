@@ -59,7 +59,7 @@ class PartnerloginController extends GetxController {
   }
 
   void signup() {
-   Get.toNamed(Routes.PARTNERSIGNUP);
+   Get.toNamed(Routes.PARTNERDASHBOARD);
   }
   Future<void> login() async{
     if (validateEmail(emailController.value.text) &&
@@ -81,6 +81,8 @@ class PartnerloginController extends GetxController {
         storage.write('token', data['token']);
         storage.write('email', data['email']);
         storage.write('name', data['username']);
+        storage.write('group_name', data['group_name']);
+
         Get.snackbar(
           "Success",
           "Welcome ${data['username']}",
