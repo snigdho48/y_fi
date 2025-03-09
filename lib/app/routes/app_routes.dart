@@ -6,6 +6,8 @@ abstract class Routes {
   static const HOME = _Paths.HOME;
   static const WIFICONNECT = _Paths.WIFICONNECT;
   static const USERLOGIN = _Paths.USERLOGIN;
+  static const PARTNERLOGIN = _Paths.PARTNERLOGIN;
+  static const PARTNERSIGNUP = _Paths.PARTNERSIGNUP;
 }
 
 abstract class _Paths {
@@ -13,4 +15,6 @@ abstract class _Paths {
   static const HOME = '/home';
   static const WIFICONNECT = '/wificonnect';
   static const USERLOGIN = '/userlogin';
+  static const PARTNERLOGIN = '/partnerlogin';
+  static const PARTNERSIGNUP = '/partnersignup';
 }

@@ -13,24 +13,24 @@ class HomeView extends GetView<HomeController> {
         height: Get.height,
         width: Get.width,
         child: Stack(children: [
-          Positioned(
-            bottom: 0,
-            left: 0,
-            child: Container(
-              height: (Get.height * 200) / 1920,
-              width: Get.width,
-              decoration: BoxDecoration(
-                color: Colors.green,
-              ),
-              child: Center(
-                child: Text(
-                  'Ad 1080x200',
-                  style:
-                      TextStyle(color: Colors.white, fontSize: Get.width * .05),
-                ),
-              ),
-            ),
-          ),
+          // Positioned(
+          //   bottom: 0,
+          //   left: 0,
+          //   child: Container(
+          //     height: (Get.height * 200) / 1920,
+          //     width: Get.width,
+          //     decoration: BoxDecoration(
+          //       color: Colors.green,
+          //     ),
+          //     child: Center(
+          //       child: Text(
+          //         'Ad 1080x200',
+          //         style:
+          //             TextStyle(color: Colors.white, fontSize: Get.width * .05),
+          //       ),
+          //     ),
+          //   ),
+          // ),
           SizedBox(
             width: Get.width,
             child: Column(

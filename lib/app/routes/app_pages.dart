@@ -2,6 +2,10 @@ import 'package:get/get.dart';
 
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
+import '../modules/partnerlogin/bindings/partnerlogin_binding.dart';
+import '../modules/partnerlogin/views/partnerlogin_view.dart';
+import '../modules/partnersignup/bindings/partnersignup_binding.dart';
+import '../modules/partnersignup/views/partnersignup_view.dart';
 import '../modules/userlogin/bindings/userlogin_binding.dart';
 import '../modules/userlogin/views/userlogin_view.dart';
 import '../modules/wificonnect/bindings/wificonnect_binding.dart';
@@ -29,6 +33,16 @@ class AppPages {
       name: _Paths.USERLOGIN,
       page: () => const UserloginView(),
       binding: UserloginBinding(),
+    ),
+    GetPage(
+      name: _Paths.PARTNERLOGIN,
+      page: () => const PartnerloginView(),
+      binding: PartnerloginBinding(),
+    ),
+    GetPage(
+      name: _Paths.PARTNERSIGNUP,
+      page: () => const PartnersignupView(),
+      binding: PartnersignupBinding(),
     ),
   ];
 }

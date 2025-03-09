@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:free_y_fi/app/modules/webview/adwebview.dart';
 import 'package:get/get.dart';
 import '../controllers/wificonnect_controller.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
@@ -41,10 +42,10 @@ class WificonnectView extends GetView<WificonnectController> {
         children: [
           SingleChildScrollView(
             child: SizedBox(
-              height: Get.height * .9115,
+              height: Get.height * .92,
               child: Center(
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -300,21 +301,9 @@ class WificonnectView extends GetView<WificonnectController> {
           Obx(() {
             if (!controller.isConnected.value) {
               return Positioned(
-                bottom: 0,
-                left: 0,
-                child: Container(
-                  height: (Get.height * 450) / 1920,
-                  width: Get.width,
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Ad 1080x450',
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    ),
-                  ),
-                ),
+              bottom:0,
+                left: (Get.width - 320) / 2,
+                child: AdBanner(width: 320, height: 100, content: 'https://creatives.reachableads.com/gozayan/320x100', adUrl: 'https://google.com'),
               );
             }
             return const SizedBox(
@@ -325,20 +314,8 @@ class WificonnectView extends GetView<WificonnectController> {
             if (controller.isConnected.value) {
               return Positioned(
                 bottom: 0,
-                left: 0,
-                child: Container(
-                  height: (Get.height * 200) / 1920,
-                  width: Get.width,
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Ad 1080x200',
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    ),
-                  ),
-                ),
+                left: (Get.width - 320) / 2,
+                child: AdBanner(width: 320, height: 50, content:    'https://creatives.reachableads.com/gozayan/320x50', adUrl: 'https://google.com'),
               );
             }
             return const SizedBox(
@@ -386,19 +363,7 @@ class WificonnectView extends GetView<WificonnectController> {
                             ],
                           ),
                           SizedBox(height: Get.height * .03),
-                          Container(
-                            width: Get.width,
-                            height: Get.height * 1400 / 1920,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Colors.lightGreenAccent,
-                            ),
-                            child: Text(
-                              'Ad 1080x1400',
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 20),
-                            ),
-                          ),
+                          AdBanner(width: Get.width, height: Get.height*.7,adheight: '250',adwidth: '300', content: 'https://creatives.reachableads.com/gozayan/300x250', adUrl: 'https://google.com'),
                           Expanded(
                               child: Padding(
                             padding: EdgeInsets.symmetric(

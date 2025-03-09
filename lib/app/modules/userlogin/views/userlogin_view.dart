@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:free_y_fi/app/modules/webview/adwebview.dart';
 import 'package:get/get.dart';
 import '../controllers/userlogin_controller.dart';
 
@@ -355,7 +356,9 @@ class UserloginView extends GetView<UserloginController> {
                                     width: Get.width * 0.37,
                                   height: Get.height * 0.05,
                                   child: ElevatedButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      controller.gotoPartnerLogin();
+                                    },
                                     child: Text(
                                       'Partner Login',
                                       style: TextStyle(
@@ -380,29 +383,21 @@ class UserloginView extends GetView<UserloginController> {
                       ),
                     ),
             // Fixed Positioned Banner
-            Positioned(
-              bottom: 0,
-              left: 0,
-              child: AnimatedOpacity(
-                opacity: (MediaQuery.of(context).viewInsets.bottom > 0) ? 0 : 1,
-                duration: Duration(
-                    milliseconds:
-                        MediaQuery.of(context).viewInsets.bottom > 0 ? 0 : 200),
-                child: Container(
-                  height: (Get.height * 200) / 1920,
-                  width: Get.width,
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Ad 1080x200',
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+          Positioned(
+      bottom: 0,
+      left: (Get.width - 320) / 2, // Centering the ad
+      child: AnimatedOpacity(
+        opacity: (MediaQuery.of(context).viewInsets.bottom > 0) ? 0 : 1,
+        duration: Duration(milliseconds: MediaQuery.of(context).viewInsets.bottom > 0 ? 0 : 200),
+                         child: AdBanner(
+                    width: 320,
+                    height: 50,
+                    content:
+                        'https://creatives.reachableads.com/gozayan/320x50',
+                    adUrl: 'https://google.com'),
+
+      ),
+    ),
              Obx(
               () => Positioned(
                 top: Get.height * 0.05,

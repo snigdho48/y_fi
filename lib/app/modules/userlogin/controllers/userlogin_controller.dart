@@ -4,9 +4,14 @@ import 'package:free_y_fi/app/modules/userlogin/controllers/googlelogin.dart';
 import 'package:free_y_fi/app/modules/userlogin/controllers/phoneSignin.dart';
 import 'package:free_y_fi/app/routes/app_pages.dart';
 import 'package:get/get.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 class UserloginController extends GetxController {
   //TODO: Implement UserloginController
+  late InAppWebViewController webViewController;
+
   final Rx<TextEditingController> emailController = TextEditingController().obs;
   final Rx<bool> isCheck = false.obs;
   final Rx<bool> userLogin = false.obs;
@@ -23,6 +28,11 @@ class UserloginController extends GetxController {
   @override
   void onReady() {
     super.onReady();
+  }
+   void openAd(String url) async {
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+    }
   }
 
   void loginWithGoogle() {
@@ -61,7 +71,9 @@ class UserloginController extends GetxController {
   void wificonnect() {
     Get.offAllNamed(Routes.WIFICONNECT);
   }
-
+void gotoPartnerLogin() {
+    Get.toNamed(Routes.PARTNERLOGIN);
+  }
   void login() {
     // final text = emailController.value.text;
     // if (text.length == 11 && isValidPhoneNumber(text)) {

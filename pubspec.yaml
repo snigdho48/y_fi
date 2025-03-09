@@ -41,7 +41,7 @@ dependencies:
   flutter_background_service: ^5.0.4
   workmanager: ^0.5.1
   qr_code_scanner_plus: ^2.0.10+1
-  one_request: ^1.0.7
+  one_request: ^2.0.1
   flutter_local_notifications: ^18.0.1
   get_storage: ^2.1.1
   path_provider: ^2.1.2
@@ -52,6 +52,8 @@ dependencies:
   # flutter_facebook_auth: ^7.1.1
   device_info_plus: ^11.3.0
   dart_ipify: ^1.1.1
+  flutter_inappwebview: ^6.1.5
+  url_launcher: ^6.3.1
 
 
 

@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:io' if (dart.library.html) 'dart:html';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dart_ipify/dart_ipify.dart';
 
