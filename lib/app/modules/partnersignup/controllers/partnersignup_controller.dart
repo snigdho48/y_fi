@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:one_request/one_request.dart';
 
+
 class PartnersignupController extends GetxController {
   //TODO: Implement PartnersignupController
   final emailController = TextEditingController().obs;
@@ -111,9 +112,10 @@ class PartnersignupController extends GetxController {
         },
       );
       response.fold((data) {
-        // storage.write('token', data['token']);
-        // storage.write('email', data['email']);
-        // storage.write('name', data['username']);
+        print('Data: $data');
+        storage.write('token', data['token']);
+        storage.write('email', data['email']);
+        storage.write('name', data['username']);
         Get.snackbar(
           "Success",
           "Welcome ${data['username']}",

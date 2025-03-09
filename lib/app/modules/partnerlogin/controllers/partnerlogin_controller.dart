@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:free_y_fi/app/data/url.dart';
 import 'package:free_y_fi/app/routes/app_pages.dart';
 import 'package:get/get.dart';
+import 'package:one_request/one_request.dart';
+import 'package:get_storage/get_storage.dart';
 
 class PartnerloginController extends GetxController {
   //TODO: Implement PartnerloginController
 
   final emailController = TextEditingController().obs;
   final passwordController = TextEditingController().obs;
+  final request= oneRequest();
+  final storage = GetStorage();
+
 
   final count = 0.obs;
   @override
@@ -55,16 +61,46 @@ class PartnerloginController extends GetxController {
   void signup() {
    Get.toNamed(Routes.PARTNERSIGNUP);
   }
-  void login() {
+  Future<void> login() async{
     if (validateEmail(emailController.value.text) &&
         passwordValidation(passwordController.value.text)) {
-      Get.snackbar(
-        "Success",
-        "Login Successful",
-        snackPosition: SnackPosition.TOP,
-        backgroundColor: Colors.black.withOpacity(0.5),
-        colorText: Colors.green,
+    try{
+       final response = await request.send(
+        url: '${baseurl}auth/partner/login/',
+        method: RequestType.POST,
+        resultOverlay: true,
+        body: {
+            "password": passwordController.value.text,
+            "email": emailController.value.text,
+          
+        
+        },
       );
+      response.fold((data) {
+        print('Data: $data');
+        storage.write('token', data['token']);
+        storage.write('email', data['email']);
+        storage.write('name', data['username']);
+        Get.snackbar(
+          "Success",
+          "Welcome ${data['username']}",
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.black.withOpacity(0.5),
+          colorText: Colors.green,
+        );
+        Get.offAllNamed(Routes.WIFICONNECT);
+      }, (er) {
+        print("Error: ${er}");
+
+        Get.snackbar("Error", "Error: $er",
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.black.withOpacity(0.5),
+            colorText: Colors.red,
+            duration: Duration(seconds: 15));
+      });
+     }catch(e){
+       print(e);
+     }
     } else {
       Get.snackbar(
         "Error",
