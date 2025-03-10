@@ -59,8 +59,9 @@ class PartnerloginController extends GetxController {
   }
 
   void signup() {
-   Get.toNamed(Routes.PARTNERDASHBOARD);
+   Get.toNamed(Routes.PARTNERSIGNUP);
   }
+
   Future<void> login() async{
     if (validateEmail(emailController.value.text) &&
         passwordValidation(passwordController.value.text)) {
@@ -89,19 +90,26 @@ class PartnerloginController extends GetxController {
           snackPosition: SnackPosition.TOP,
           backgroundColor: Colors.black.withOpacity(0.5),
           colorText: Colors.green,
+          duration: Duration(seconds: 5),
         );
-        Get.offAllNamed(Routes.WIFICONNECT);
+        Get.offAllNamed(Routes.PARTNERDASHBOARD);
       }, (er) {
-        print("Error: ${er}");
 
-        Get.snackbar("Error", "Error: $er",
-            snackPosition: SnackPosition.BOTTOM,
+        Get.snackbar("Error", "Error: ${er}",
+            snackPosition: SnackPosition.TOP,
             backgroundColor: Colors.black.withOpacity(0.5),
             colorText: Colors.red,
-            duration: Duration(seconds: 15));
+            duration: Duration(seconds: 5));
       });
      }catch(e){
-       print(e);
+      Get.snackbar(
+        "Error",
+        "Please enter valid email and password",
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.black.withOpacity(0.5),
+        colorText: Colors.red,
+        duration: Duration(seconds: 5),
+      );
      }
     } else {
       Get.snackbar(
@@ -110,6 +118,7 @@ class PartnerloginController extends GetxController {
         snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.black.withOpacity(0.5),
         colorText: Colors.red,
+        duration: Duration(seconds: 5),
       );
     }
   }

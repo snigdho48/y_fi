@@ -1,8 +1,15 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:free_y_fi/app/data/url.dart';
 import 'package:get/get.dart';
 import 'package:one_request/one_request.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:pretty_qr_code/pretty_qr_code.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:file_picker/file_picker.dart';
+
 
 class PartnerdashboardController extends GetxController {
   //TODO: Implement PartnerdashboardController
@@ -12,6 +19,7 @@ class PartnerdashboardController extends GetxController {
   final storage = GetStorage();
   final ssid = TextEditingController().obs;
   final password = TextEditingController().obs;
+  final qrData = ''.obs;
   @override
   void onInit() {
     routerData();
@@ -84,12 +92,16 @@ class PartnerdashboardController extends GetxController {
       content: Column(
         children: [
           TextField(
+                        style: TextStyle(color: Colors.black),
+
             controller: ssid.value,
             decoration: InputDecoration(
               hintText: "SSID",
             ),
           ),
           TextField(
+                        style: TextStyle(color: Colors.black),
+
             controller: password.value,
             decoration: InputDecoration(
               hintText: "Password",
@@ -123,6 +135,7 @@ class PartnerdashboardController extends GetxController {
       response.fold((data) {
         venuedata.clear();
         venuedata.addAll(data);
+        print("Data: $data");
         Get.snackbar(
           "Success",
           "successfully added",
@@ -144,9 +157,86 @@ class PartnerdashboardController extends GetxController {
     }
   }
 
+  Future<void> downloadQr(index)async {
+    qrData.value = '';
+      try {
+        qrData.value = 'https://app.freeyfi.com/?code=${venuedata[index]['code']}';
+        final qrGenerator =
+             QrCode.fromData(
+        data: qrData.value,
+        errorCorrectLevel: QrErrorCorrectLevel.H,
+      ); // Convert QR code to image
+            final QrImage qrImage = QrImage(qrGenerator);
+  final PrettyQrDecoration decoration = PrettyQrDecoration(
+        shape: PrettyQrSmoothSymbol(roundFactor: 0.1,color: Colors.black),
+        background: Colors.white,
+        image: PrettyQrDecorationImage(
+          image: AssetImage('assets/icon/app_logo.png'),
+        ),
+      );
+          final ByteData? pngBytes =
+          await qrImage.toImageAsBytes(size: 1000, decoration: decoration);
+
+if (pngBytes == null) {
+        throw Exception("QR image generation failed");
+      }
+
+      // Get storage directory
+          String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+
+      if (selectedDirectory == null) {
+        print("No directory selected");
+        return;
+      }
+     
+
+      // Define file path
+      final filePath = '$selectedDirectory/qr_code_${venuedata[index]['ssid']}.png';
+      final file = File(filePath);
+
+      await file.writeAsBytes(pngBytes.buffer.asUint8List());
+    
+
+        
+
+        Get.snackbar(
+          "Success",
+          "QR Code saved to $filePath",
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.black.withOpacity(0.5),
+          colorText: Colors.green,
+          duration: Duration(seconds: 5),
+        onTap: (snack) async {
+          await openFile(filePath);
+        },
+              );
+      } catch (e) {
+        print(e);
+       Get.snackbar(
+          "Error",
+          "Error: $e",
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.black.withOpacity(0.5),
+          colorText: Colors.red,
+                    duration: Duration(seconds: 5),
+
+        );
+      }
+    
+  }
+
+
+  Future<void> openFile(String folderPath) async {
+   final Uri _uri = Uri.parse(folderPath);
+    if (await canLaunch(_uri.toString())) {
+      await launch(_uri.toString());
+    } else {
+      throw 'Could not launch $_uri';
+    }
+  }
 void editVenueWifi(index){
-  ssid.value.text = venuedata[index]['ssid'];
-  password.value.text = venuedata[index]['password'];
+  ssid.value.text = venuedata[index]['ssid']??'';
+  password.value.text = venuedata[index]['password']??'';
     Get.defaultDialog(
       title: "Edit Wifi ${venuedata[index]['ssid']}",
       confirm: ElevatedButton(
@@ -165,12 +255,16 @@ void editVenueWifi(index){
       content: Column(
         children: [
           TextField(
+            style: TextStyle(color: Colors.black),
             controller: ssid.value,
             decoration: InputDecoration(
               hintText: "SSID",
+              
             ),
           ),
           TextField(
+            style: TextStyle(color: Colors.black),
+
             controller: password.value,
             decoration: InputDecoration(
               hintText: "Password",

@@ -15,6 +15,12 @@
 		</array>
 		<key>CFBundleDisplayName</key>
 	<string>Y FI</string>
+	<key>NSDocumentsDirectoryUsageDescription</key>
+<string>We need access to save files</string>
+<key>NSDownloadsDirectoryUsageDescription</key>
+<string>We need access to save files</string>
+<key>UISupportsDocumentBrowser</key>  
+<true/>
 		<key>CFBundleExecutable</key>
 		<string>$(EXECUTABLE_NAME)</string>
 		<key>CFBundleIdentifier</key>

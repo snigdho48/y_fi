@@ -89,9 +89,11 @@ class PartnersignupController extends GetxController {
       Get.snackbar(
         "Error",
         "Please check the terms and conditions",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.black.withOpacity(0.5),
         colorText: Colors.red,
+                  duration: Duration(seconds: 5),
+
       );
       return;
     }
@@ -129,10 +131,10 @@ class PartnersignupController extends GetxController {
         print("Error: ${er}");
 
         Get.snackbar("Error", "Error: $er",
-            snackPosition: SnackPosition.BOTTOM,
+            snackPosition: SnackPosition.TOP,
             backgroundColor: Colors.black.withOpacity(0.5),
             colorText: Colors.red,
-            duration: Duration(seconds: 15));
+            duration: Duration(seconds: 5));
       });
      }catch(e){
        print(e);
@@ -141,9 +143,11 @@ class PartnersignupController extends GetxController {
      Get.snackbar(
          "Error",
          "Something went wrong",
-         snackPosition: SnackPosition.BOTTOM,
+         snackPosition: SnackPosition.TOP,
          backgroundColor: Colors.black.withOpacity(0.5),
          colorText: Colors.red,
+                   duration: Duration(seconds: 5),
+
        );
    }
   }

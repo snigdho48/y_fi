@@ -59,17 +59,29 @@ class PartnerdashboardView extends GetView<PartnerdashboardController> {
                               children: [
                                 Row(
                                           children: [
-                                            Text('Created At: '),
+                                            Text('Created At: ',
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ),
                                             Text(DateTime.parse(controller
                                                         .venuedata[index]
-                                                    ['created_at'].toString()).toLocal().toString().split(' ')[0]),
+                                                    ['created_at'].toString()).toLocal().toString().split(' ')[0],
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ),
                                           ],
                                         ),
                                         Row(
                                           children: [
-                                            Text('Password: '),
+                                            Text('Password: ',
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ),
                                             Text(controller.venuedata[index]
-                                                ['password'].toString()),
+                                                ['password'].toString(),
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ),
                                           ],
                                         ),
                               ],
@@ -79,6 +91,12 @@ class PartnerdashboardView extends GetView<PartnerdashboardController> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               
                               children: [
+                                IconButton(
+                                  icon: Icon(Icons.qr_code),
+                                  onPressed: (){
+                                    controller.downloadQr(index);
+                                  },
+                                ),  
                                 IconButton(
                                   icon: Icon(Icons.edit),
                                   onPressed: (){
