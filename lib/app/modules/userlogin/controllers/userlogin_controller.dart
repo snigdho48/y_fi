@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 class UserloginController extends GetxController {
   //TODO: Implement UserloginController
   late InAppWebViewController webViewController;
@@ -29,7 +28,8 @@ class UserloginController extends GetxController {
   void onReady() {
     super.onReady();
   }
-   void openAd(String url) async {
+
+  void openAd(String url) async {
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     }
@@ -71,9 +71,11 @@ class UserloginController extends GetxController {
   void wificonnect() {
     Get.offAllNamed(Routes.WIFICONNECT);
   }
-void gotoPartnerLogin() {
+
+  void gotoPartnerLogin() {
     Get.toNamed(Routes.PARTNERLOGIN);
   }
+
   void login() {
     // final text = emailController.value.text;
     // if (text.length == 11 && isValidPhoneNumber(text)) {

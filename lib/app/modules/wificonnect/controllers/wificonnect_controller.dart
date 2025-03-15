@@ -546,7 +546,7 @@ class WificonnectController extends GetxController {
   void onQRViewCreated(QRViewController qrController) {
     controller = qrController;
     qrController.scannedDataStream.listen((scanData) async {
-            print("QR Code Result: ${scanData.code?.split('?code=')}");
+      print("QR Code Result: ${scanData.code?.split('?code=')}");
 
       if (!(scanData.code?.contains('?code=') ?? false)) {
         return;

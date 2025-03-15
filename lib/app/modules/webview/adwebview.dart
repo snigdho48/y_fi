@@ -13,7 +13,7 @@ class AdBanner extends StatelessWidget {
   AdBanner({
     required this.width,
     required this.height,
-    required this.content , // <-- Pass the iframe URL dynamically
+    required this.content, // <-- Pass the iframe URL dynamically
     required this.adUrl,
     this.adheight,
     this.adwidth,
@@ -21,7 +21,6 @@ class AdBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       width: width,
       height: height,
@@ -29,7 +28,8 @@ class AdBanner extends StatelessWidget {
         color: Colors.transparent,
       ),
       child: InAppWebView(
-        initialUrlRequest: URLRequest(url: WebUri.uri(
+        initialUrlRequest: URLRequest(
+            url: WebUri.uri(
           Uri.parse(content),
         )),
         initialSettings: InAppWebViewSettings(
@@ -46,17 +46,14 @@ class AdBanner extends StatelessWidget {
           allowFileAccess: true,
           javaScriptCanOpenWindowsAutomatically: true,
           javaScriptEnabled: true,
-          mixedContentMode:MixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW, 
-          
-           // Enable mixed content
+          mixedContentMode: MixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW,
+
+          // Enable mixed content
         ),
         onReceivedServerTrustAuthRequest: (controller, challenge) async {
-            return ServerTrustAuthResponse(
+          return ServerTrustAuthResponse(
               action: ServerTrustAuthResponseAction.PROCEED);
-
         },
-      
-
         initialData: InAppWebViewInitialData(
           data: """
           <html>
@@ -70,7 +67,7 @@ class AdBanner extends StatelessWidget {
                 position: absolute; top: 0; left: 0; width: 100%; height: 100%;
                 background: rgba(0, 0, 0, 0); z-index: 2; cursor: pointer;
               }
-              iframe {width: ${adwidth ?? width}px; height: ${adheight?? height}px;  border: none; position: relative; z-index: 1; }
+              iframe {width: ${adwidth ?? width}px; height: ${adheight ?? height}px;  border: none; position: relative; z-index: 1; }
             </style>
             <script>
               function openAd() {
@@ -105,4 +102,3 @@ class AdBanner extends StatelessWidget {
     }
   }
 }
-

@@ -63,7 +63,7 @@ class PartnersignupView extends GetView<PartnersignupController> {
                   SizedBox(
                     height: Get.height * 0.02,
                   ),
-                                                TextFormField(
+                  TextFormField(
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Color(0xFF191B41),
@@ -126,57 +126,57 @@ class PartnersignupView extends GetView<PartnersignupController> {
                       fillColor: Colors.white, // White background
                     ),
                   ),
-              
-                              TextFormField(
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Color(0xFF191B41),
-                                  fontSize: Get.width * 0.05,
-                                ),
-                                validator: (value) => controller.validateEmail(value)
-                                    ? null
-                                    : 'Please enter a valid Email',
-            
-                    controller: controller.emailController.value,  // Accessing the value of Rx<TextEditingController>
+                  TextFormField(
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Color(0xFF191B41),
+                      fontSize: Get.width * 0.05,
+                    ),
+                    validator: (value) => controller.validateEmail(value)
+                        ? null
+                        : 'Please enter a valid Email',
+
+                    controller: controller.emailController
+                        .value, // Accessing the value of Rx<TextEditingController>
                     decoration: InputDecoration(
                       constraints: BoxConstraints(
                         maxWidth: Get.width * 0.85,
-            
                       ),
-            
+
                       floatingLabelBehavior: FloatingLabelBehavior.never,
                       label: Center(
-                        child:RichText(text:
-                                  TextSpan(
-            
-                                    children: [
-                                      TextSpan(
-                                        text: 'Enter Your Email ',
-                                        style: TextStyle(
-                                          fontSize: Get.width * 0.04,
-                                          fontWeight: FontWeight.normal,
-                                          color: Color(0xFF191B41),
-                                          height: 1.5,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                 ),
+                        child: RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: 'Enter Your Email ',
+                                style: TextStyle(
+                                  fontSize: Get.width * 0.04,
+                                  fontWeight: FontWeight.normal,
+                                  color: Color(0xFF191B41),
+                                  height: 1.5,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-            
+
                       labelStyle: TextStyle(
                         color: Color(0xFF191B41),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(40),
                         borderSide: BorderSide(
-                          color: Colors.lightGreenAccent, // Light green border on focus
+                          color: Colors
+                              .lightGreenAccent, // Light green border on focus
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(40),
                         borderSide: BorderSide(
-                          color: Colors.lightGreenAccent, // Light green border when enabled
+                          color: Colors
+                              .lightGreenAccent, // Light green border when enabled
                         ),
                       ),
                       focusedErrorBorder: OutlineInputBorder(
@@ -186,12 +186,10 @@ class PartnersignupView extends GetView<PartnersignupController> {
                         ),
                       ),
                       filled: true,
-                      fillColor: Colors.white,  // White background
-            
+                      fillColor: Colors.white, // White background
                     ),
                   ),
-              
-Obx(() => TextFormField(
+                  Obx(() => TextFormField(
                         textAlign: TextAlign.center,
                         obscureText: !controller.isPasswordVisible
                             .value, // Toggle password visibility
@@ -244,7 +242,7 @@ Obx(() => TextFormField(
                           filled: true,
                           fillColor: Colors.white,
                           suffixIcon: Padding(
-                            padding:  EdgeInsets.only(right: Get.width*.01),
+                            padding: EdgeInsets.only(right: Get.width * .01),
                             child: IconButton(
                               icon: Icon(
                                 controller.isPasswordVisible.value
@@ -258,15 +256,12 @@ Obx(() => TextFormField(
                           ),
                         ),
                       )),
-
-
                   TextFormField(
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Color(0xFF191B41),
                       fontSize: Get.width * 0.05,
                     ),
-            
 
                     controller: controller.phoneController
                         .value, // Accessing the value of Rx<TextEditingController>
@@ -321,14 +316,12 @@ Obx(() => TextFormField(
                       fillColor: Colors.white, // White background
                     ),
                   ),
-              
                   TextFormField(
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Color(0xFF191B41),
                       fontSize: Get.width * 0.05,
                     ),
-        
 
                     controller: controller.addressController
                         .value, // Accessing the value of Rx<TextEditingController>
@@ -383,91 +376,86 @@ Obx(() => TextFormField(
                       fillColor: Colors.white, // White background
                     ),
                   ),
-              SizedBox(
+                  SizedBox(
                     height: Get.height * 0.02,
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    spacing: 5,
+                    children: [
+                      Obx(
+                        () => Transform.scale(
+                          scale: 1.5, // Scales the checkbox
+                          child: Checkbox(
+                            value: controller.isCheck.value,
+                            onChanged: (value) {
+                              controller.isCheck.value =
+                                  value ?? false; // Toggle the value on change
+                            },
+                            activeColor: Colors
+                                .lightGreenAccent, // The color when checked
+                            checkColor:
+                                Color(0xFF191B41), // The color of the checkmark
+                            fillColor: controller.isCheck.value
+                                ? MaterialStateProperty.all(
+                                    Colors.lightGreenAccent)
+                                : null, // The color when unchecked
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            side: BorderSide(
+                                color: Colors
+                                    .white), // Border color of the checkbox
+                          ),
+                        ),
+                      ),
 
-                Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      spacing: 5,
-                      children: [
-                        Obx(
-                          () => Transform.scale(
-                            scale: 1.5, // Scales the checkbox
-                            child: Checkbox(
-                              value: controller.isCheck.value,
-                              onChanged: (value) {
-                                controller.isCheck.value = value ??
-                                    false; // Toggle the value on change
-                              },
-                              activeColor: Colors
-                                  .lightGreenAccent, // The color when checked
-                              checkColor: Color(
-                                  0xFF191B41), // The color of the checkmark
-                              fillColor: controller.isCheck.value
-                                  ? MaterialStateProperty.all(
-                                      Colors.lightGreenAccent)
-                                  : null, // The color when unchecked
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
+                      // This makes the text take up the remaining space
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Click to accept',
+                              style: TextStyle(
+                                fontSize: Get.width * 0.04,
+                                fontWeight: FontWeight.normal,
+                                height: 1.5,
                               ),
-                              side: BorderSide(
-                                  color: Colors
-                                      .white), // Border color of the checkbox
                             ),
+                          ],
+                        ),
+                      ),
+
+                      RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          text:
+                              'Terms & Conditions', // Adds some extra space between the text and underline
+                          style: TextStyle(
+                            fontSize: Get.width * 0.04,
+                            fontWeight: FontWeight.bold,
+                            decoration:
+                                TextDecoration.underline, // Underline the text
+                            decorationColor: Colors
+                                .white, // Optional: Set the underline color
+                            decorationStyle:
+                                TextDecorationStyle.solid, // Solid underline
+                            decorationThickness: 1,
+                            height:
+                                1.5, // This adjusts the vertical spacing for the underline
                           ),
                         ),
-                    
-                        // This makes the text take up the remaining space
-                        RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: 'Click to accept',
-                                style: TextStyle(
-                                  fontSize: Get.width * 0.04,
-                                  fontWeight: FontWeight.normal,
-                                  height: 1.5,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                    
-                        RichText(
-                          textAlign: TextAlign.center,
-                          text: TextSpan(
-                            text:
-                                'Terms & Conditions', // Adds some extra space between the text and underline
-                            style: TextStyle(
-                              fontSize: Get.width * 0.04,
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration
-                                  .underline, // Underline the text
-                              decorationColor: Colors
-                                  .white, // Optional: Set the underline color
-                              decorationStyle: TextDecorationStyle
-                                  .solid, // Solid underline
-                              decorationThickness: 1,
-                              height:
-                                  1.5, // This adjusts the vertical spacing for the underline
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  
-                   
-             SizedBox(
-                    
+                      )
+                    ],
+                  ),
+                  SizedBox(
                     height: Get.height * 0.07,
                     child: ElevatedButton(
                       onPressed: controller.signup,
                       child: RichText(
                         text: TextSpan(
-                      
                           children: [
-                           TextSpan(
+                            TextSpan(
                               text: 'Become ',
                               style: TextStyle(
                                 fontSize: Get.width * 0.05,
@@ -510,7 +498,7 @@ Obx(() => TextFormField(
                 ],
               ),
             ),
-                  Get.mediaQuery.viewInsets.bottom > 0
+            Get.mediaQuery.viewInsets.bottom > 0
                 ? SizedBox.shrink()
                 : Positioned(
                     bottom: 0,
@@ -524,20 +512,16 @@ Obx(() => TextFormField(
                               MediaQuery.of(context).viewInsets.bottom > 0
                                   ? 0
                                   : 200),
-                                      child: AdBanner(
+                      child: AdBanner(
                           width: 320,
                           height: 50,
                           content:
                               'https://creatives.reachableads.com/gozayan/320x50/2',
                           adUrl: 'https://google.com'),
-
                     ),
                   ),
-          
-         
           ],
         ),
-      
       ),
     );
   }

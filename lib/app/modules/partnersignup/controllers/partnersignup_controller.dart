@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:one_request/one_request.dart';
 
-
 class PartnersignupController extends GetxController {
   //TODO: Implement PartnersignupController
   final emailController = TextEditingController().obs;
@@ -33,7 +32,7 @@ class PartnersignupController extends GetxController {
     super.onClose();
   }
 
-    void togglePasswordVisibility() {
+  void togglePasswordVisibility() {
     isPasswordVisible.value = !isPasswordVisible.value; // Toggle visibility
   }
 
@@ -56,7 +55,7 @@ class PartnersignupController extends GetxController {
     return true;
   }
 
-   bool validateEmail(String? value) {
+  bool validateEmail(String? value) {
     if (value == null) {
       return false;
     }
@@ -84,71 +83,71 @@ class PartnersignupController extends GetxController {
     }
     return true;
   }
+
   Future<void> signup() async {
-    if(!isCheck.value){
+    if (!isCheck.value) {
       Get.snackbar(
         "Error",
         "Please check the terms and conditions",
         snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.black.withOpacity(0.5),
         colorText: Colors.red,
-                  duration: Duration(seconds: 5),
-
+        duration: Duration(seconds: 5),
       );
       return;
     }
-   if(validateEmail(emailController.value.text) && passwordValidation(passwordController.value.text) && usernameController.value.text.isNotEmpty ){
-     try{
-       final response = await request.send(
-        url: '${baseurl}auth/partner/register/',
-        method: RequestType.POST,
-        resultOverlay: true,
-        body: {
+    if (validateEmail(emailController.value.text) &&
+        passwordValidation(passwordController.value.text) &&
+        usernameController.value.text.isNotEmpty) {
+      try {
+        final response = await request.send(
+          url: '${baseurl}auth/partner/register/',
+          method: RequestType.POST,
+          resultOverlay: true,
+          body: {
             "username": usernameController.value.text,
             "userpassword": passwordController.value.text,
             "email": emailController.value.text,
             "venue_name": usernameController.value.text,
             "address": addressController.value.text,
             "phone_number": phoneController.value.text,
-        
-        },
-      );
-      response.fold((data) {
-        print('Data: $data');
-        storage.write('token', data['token']);
-        storage.write('email', data['email']);
-        storage.write('name', data['username']);
-        storage.write('group_name', data['group_name']);
-        Get.snackbar(
-          "Success",
-          "Welcome ${data['username']}",
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.black.withOpacity(0.5),
-          colorText: Colors.green,
+          },
         );
-        Get.offAllNamed(Routes.PARTNERDASHBOARD);
-      }, (er) {
-        print("Error: ${er}");
-
-        Get.snackbar("Error", "Error: $er",
+        response.fold((data) {
+          print('Data: $data');
+          storage.write('token', data['token']);
+          storage.write('email', data['email']);
+          storage.write('name', data['username']);
+          storage.write('group_name', data['group_name']);
+          Get.snackbar(
+            "Success",
+            "Welcome ${data['username']}",
             snackPosition: SnackPosition.TOP,
             backgroundColor: Colors.black.withOpacity(0.5),
-            colorText: Colors.red,
-            duration: Duration(seconds: 5));
-      });
-     }catch(e){
-       print(e);
-     }
-   }else{
-     Get.snackbar(
-         "Error",
-         "Something went wrong",
-         snackPosition: SnackPosition.TOP,
-         backgroundColor: Colors.black.withOpacity(0.5),
-         colorText: Colors.red,
-                   duration: Duration(seconds: 5),
+            colorText: Colors.green,
+          );
+          Get.offAllNamed(Routes.PARTNERDASHBOARD);
+        }, (er) {
+          print("Error: ${er}");
 
-       );
-   }
+          Get.snackbar("Error", "Error: $er",
+              snackPosition: SnackPosition.TOP,
+              backgroundColor: Colors.black.withOpacity(0.5),
+              colorText: Colors.red,
+              duration: Duration(seconds: 5));
+        });
+      } catch (e) {
+        print(e);
+      }
+    } else {
+      Get.snackbar(
+        "Error",
+        "Something went wrong",
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.black.withOpacity(0.5),
+        colorText: Colors.red,
+        duration: Duration(seconds: 5),
+      );
+    }
   }
 }

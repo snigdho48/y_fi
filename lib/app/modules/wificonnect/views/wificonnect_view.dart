@@ -301,9 +301,14 @@ class WificonnectView extends GetView<WificonnectController> {
           Obx(() {
             if (!controller.isConnected.value) {
               return Positioned(
-              bottom:0,
-                left: (Get.width - 320) / 2,
-                child: AdBanner(width: 320, height: 100, content: 'https://creatives.reachableads.com/gozayan/320x100', adUrl: 'https://google.com'),
+                bottom: 0,
+                left: (Get.width - 300) / 2,
+                child: AdBanner(
+                    width: 300,
+                    height: 250,
+                    content:
+                        'https://creatives.reachableads.com/gozayan/320x100',
+                    adUrl: 'https://google.com'),
               );
             }
             return const SizedBox(
@@ -314,8 +319,13 @@ class WificonnectView extends GetView<WificonnectController> {
             if (controller.isConnected.value) {
               return Positioned(
                 bottom: 0,
-                left: (Get.width - 320) / 2,
-                child: AdBanner(width: 320, height: 50, content:    'https://creatives.reachableads.com/gozayan/320x50', adUrl: 'https://google.com'),
+                left: (Get.width - 300) / 2,
+                child: AdBanner(
+                    width: 300,
+                    height: 250,
+                    content:
+                        'https://creatives.reachableads.com/gozayan/320x50',
+                    adUrl: 'https://google.com'),
               );
             }
             return const SizedBox(
@@ -363,7 +373,14 @@ class WificonnectView extends GetView<WificonnectController> {
                             ],
                           ),
                           SizedBox(height: Get.height * .03),
-                          AdBanner(width: Get.width, height: Get.height*.7,adheight: '250',adwidth: '300', content: 'https://creatives.reachableads.com/gozayan/300x250', adUrl: 'https://google.com'),
+                          AdBanner(
+                              width: Get.width,
+                              height: Get.height * .7,
+                              adheight: '250',
+                              adwidth: '300',
+                              content:
+                                  'https://creatives.reachableads.com/gozayan/300x250',
+                              adUrl: 'https://google.com'),
                           Expanded(
                               child: Padding(
                             padding: EdgeInsets.symmetric(

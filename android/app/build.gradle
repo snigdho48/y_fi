@@ -23,7 +23,7 @@ android {
 
     defaultConfig {
         applicationId = "org.yfi.free_y_fi"
-        minSdk = 23
+        minSdk = 33
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName

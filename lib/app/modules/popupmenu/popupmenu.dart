@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:free_y_fi/app/routes/app_pages.dart';
 import 'package:get/get.dart';
@@ -12,15 +10,13 @@ Widget buildPopupMenu(BuildContext context, addVenueWifi) {
       backgroundColor: MaterialStateProperty.all(Colors.transparent),
     ),
     constraints: BoxConstraints(
-
       maxWidth: 50,
-      
     ),
     padding: EdgeInsets.zero,
     position: PopupMenuPosition.under,
     icon: Icon(Icons.more_vert),
-      offset: Offset(-20, 0),
-      color: Colors.black,
+    offset: Offset(-20, 0),
+    color: Colors.black,
     itemBuilder: (context) => [
       PopupMenuItem(
         child: Icon(Icons.person_2_rounded),
@@ -38,7 +34,7 @@ Widget buildPopupMenu(BuildContext context, addVenueWifi) {
     onSelected: (value) {
       switch (value) {
         case 1:
-         Get.toNamed('/profile');
+          Get.toNamed('/profile');
           break;
         case 2:
           addVenueWifi();

@@ -10,9 +10,8 @@ class PartnerloginController extends GetxController {
 
   final emailController = TextEditingController().obs;
   final passwordController = TextEditingController().obs;
-  final request= oneRequest();
+  final request = oneRequest();
   final storage = GetStorage();
-
 
   final count = 0.obs;
   @override
@@ -42,6 +41,7 @@ class PartnerloginController extends GetxController {
     }
     return true;
   }
+
   bool passwordValidation(String? value) {
     if (value == null) {
       return false;
@@ -59,58 +59,55 @@ class PartnerloginController extends GetxController {
   }
 
   void signup() {
-   Get.toNamed(Routes.PARTNERSIGNUP);
+    Get.toNamed(Routes.PARTNERSIGNUP);
   }
 
-  Future<void> login() async{
+  Future<void> login() async {
     if (validateEmail(emailController.value.text) &&
         passwordValidation(passwordController.value.text)) {
-    try{
-       final response = await request.send(
-        url: '${baseurl}auth/partner/login/',
-        method: RequestType.POST,
-        resultOverlay: true,
-        body: {
+      try {
+        final response = await request.send(
+          url: '${baseurl}auth/partner/login/',
+          method: RequestType.POST,
+          resultOverlay: true,
+          body: {
             "password": passwordController.value.text,
             "email": emailController.value.text,
-          
-        
-        },
-      );
-      response.fold((data) {
-        print('Data: $data');
-        storage.write('token', data['token']);
-        storage.write('email', data['email']);
-        storage.write('name', data['username']);
-        storage.write('group_name', data['group_name']);
-
-        Get.snackbar(
-          "Success",
-          "Welcome ${data['username']}",
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.black.withOpacity(0.5),
-          colorText: Colors.green,
-          duration: Duration(seconds: 5),
+          },
         );
-        Get.offAllNamed(Routes.PARTNERDASHBOARD);
-      }, (er) {
+        response.fold((data) {
+          print('Data: $data');
+          storage.write('token', data['token']);
+          storage.write('email', data['email']);
+          storage.write('name', data['username']);
+          storage.write('group_name', data['group_name']);
 
-        Get.snackbar("Error", "Error: ${er}",
+          Get.snackbar(
+            "Success",
+            "Welcome ${data['username']}",
             snackPosition: SnackPosition.TOP,
             backgroundColor: Colors.black.withOpacity(0.5),
-            colorText: Colors.red,
-            duration: Duration(seconds: 5));
-      });
-     }catch(e){
-      Get.snackbar(
-        "Error",
-        "Please enter valid email and password",
-        snackPosition: SnackPosition.TOP,
-        backgroundColor: Colors.black.withOpacity(0.5),
-        colorText: Colors.red,
-        duration: Duration(seconds: 5),
-      );
-     }
+            colorText: Colors.green,
+            duration: Duration(seconds: 5),
+          );
+          Get.offAllNamed(Routes.PARTNERDASHBOARD);
+        }, (er) {
+          Get.snackbar("Error", "Error: ${er}",
+              snackPosition: SnackPosition.TOP,
+              backgroundColor: Colors.black.withOpacity(0.5),
+              colorText: Colors.red,
+              duration: Duration(seconds: 5));
+        });
+      } catch (e) {
+        Get.snackbar(
+          "Error",
+          "Please enter valid email and password",
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.black.withOpacity(0.5),
+          colorText: Colors.red,
+          duration: Duration(seconds: 5),
+        );
+      }
     } else {
       Get.snackbar(
         "Error",

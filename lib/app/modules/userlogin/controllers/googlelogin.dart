@@ -36,6 +36,7 @@ class GoogleloginController extends GetxController {
   }
 
   Future<void> signInGoogle() async {
+    oneRequest.loading();
     final result = await signInWithGoogle();
     print("Result: ${result.user}");
     if (result.user != null) {
@@ -53,7 +54,8 @@ class GoogleloginController extends GetxController {
         body: {
           "email": result.user!.email,
           "password": result.user!.uid,
-          "username": result.user!.displayName,
+          "username":
+              result.user!.displayName ?? result.user!.email!.split('@')[0],
           "device_id": devicedata['device_id'],
           "device_name": devicedata['device_name'],
           "device_os": devicedata['device_os'],
