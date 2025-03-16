@@ -43,32 +43,6 @@ class WificonnectController extends GetxController {
     super.onInit();
     requestPermissions();
     monitorWiFiStatus();
-    jsonList.value = [
-      {
-        'code': 'code1',
-        'venu': 'Office',
-        "ssid": "A Maze Venture",
-        "password": "Amaze@2024#"
-      },
-      {
-        'code': 'code2',
-        'venu': 'MY Home',
-        "ssid": "Snigdho_5G",
-        "password": "22292646"
-      },
-      {
-        'code': 'code3',
-        'venu': "Vai's Home",
-        "ssid": "Sayed family",
-        "password": "yameen2012"
-      },
-      {
-        'code': 'code4',
-        'venu': "Vai's Office",
-        "ssid": "AirStation",
-        "password": "03070809"
-      },
-    ];
   }
 
   /// Requests required permissions
@@ -400,7 +374,7 @@ class WificonnectController extends GetxController {
 
     isRun.value = false;
     loadingtimer?.cancel();
-    loadingCount.value = 20;
+    loadingCount.value = 30;
     isLoading.value = true;
 
     loadingtimer = Timer.periodic(Duration(seconds: 1), (timer) {

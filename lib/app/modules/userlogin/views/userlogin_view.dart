@@ -60,80 +60,80 @@ class UserloginView extends GetView<UserloginController> {
                         ),
                       ],
                     ),
-                    SizedBox(height: Get.height * 0.1),
-                    // Image.asset(
-                    //   'assets/icon/app_logo.png',
-                    //   width: Get.width * .5,
-                    // ),
-                    // SizedBox(height: Get.height * 0.02),
+                    SizedBox(height: Get.height * 0.02),
+                    Image.asset(
+                      'assets/icon/app_logo.png',
+                      width: Get.width * .5,
+                    ),
+                    SizedBox(height: Get.height * 0.02),
 
-                                TextFormField(
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Color(0xFF191B41),
-                                    fontSize: Get.width * 0.05,
-                                  ),
-                                  validator: (value) => controller.isValidPhoneNumber(value)
-                                      ? null
-                                      : 'Please enter a valid phone number',
+                    //             TextFormField(
+                    //               textAlign: TextAlign.center,
+                    //               style: TextStyle(
+                    //                 color: Color(0xFF191B41),
+                    //                 fontSize: Get.width * 0.05,
+                    //               ),
+                    //               validator: (value) => controller.isValidPhoneNumber(value)
+                    //                   ? null
+                    //                   : 'Please enter a valid phone number',
 
-                      controller: controller.emailController.value,  // Accessing the value of Rx<TextEditingController>
-                      decoration: InputDecoration(
-                        constraints: BoxConstraints(
-                          maxWidth: Get.width * 0.85,
+                    //   controller: controller.emailController.value,  // Accessing the value of Rx<TextEditingController>
+                    //   decoration: InputDecoration(
+                    //     constraints: BoxConstraints(
+                    //       maxWidth: Get.width * 0.85,
 
-                        ),
+                    //     ),
 
-                        floatingLabelBehavior: FloatingLabelBehavior.never,
-                        label: Center(
-                          child:RichText(text:
-                                    TextSpan(
+                    //     floatingLabelBehavior: FloatingLabelBehavior.never,
+                    //     label: Center(
+                    //       child:RichText(text:
+                    //                 TextSpan(
 
-                                      children: [
-                                        TextSpan(
-                                          text: 'Enter Your Phone ',
-                                          style: TextStyle(
-                                            fontSize: Get.width * 0.04,
-                                            fontWeight: FontWeight.bold,
-                                            color: Color(0xFF191B41),
-                                            height: 1.5,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                   ),
-                        ),
+                    //                   children: [
+                    //                     TextSpan(
+                    //                       text: 'Enter Your Phone ',
+                    //                       style: TextStyle(
+                    //                         fontSize: Get.width * 0.04,
+                    //                         fontWeight: FontWeight.normal,
+                    //                         color: Color(0xFF191B41),
+                    //                         height: 1.5,
+                    //                       ),
+                    //                     ),
+                    //                   ],
+                    //                 ),
+                    //                ),
+                    //     ),
 
-                        labelStyle: TextStyle(
-                          color: Color(0xFF191B41),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(40),
-                          borderSide: BorderSide(
-                            color: Colors.lightGreenAccent, // Light green border on focus
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(40),
-                          borderSide: BorderSide(
-                            color: Colors.lightGreenAccent, // Light green border when enabled
-                          ),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(40),
-                          borderSide: BorderSide(
-                            color: Colors.lightGreenAccent,
-                          ),
-                        ),
-                        filled: true,
-                        fillColor: Colors.white,  // White background
+                    //     labelStyle: TextStyle(
+                    //       color: Color(0xFF191B41),
+                    //     ),
+                    //     focusedBorder: OutlineInputBorder(
+                    //       borderRadius: BorderRadius.circular(40),
+                    //       borderSide: BorderSide(
+                    //         color: Colors.lightGreenAccent, // Light green border on focus
+                    //       ),
+                    //     ),
+                    //     enabledBorder: OutlineInputBorder(
+                    //       borderRadius: BorderRadius.circular(40),
+                    //       borderSide: BorderSide(
+                    //         color: Colors.lightGreenAccent, // Light green border when enabled
+                    //       ),
+                    //     ),
+                    //     focusedErrorBorder: OutlineInputBorder(
+                    //       borderRadius: BorderRadius.circular(40),
+                    //       borderSide: BorderSide(
+                    //         color: Colors.lightGreenAccent,
+                    //       ),
+                    //     ),
+                    //     filled: true,
+                    //     fillColor: Colors.white,  // White background
 
-                      ),
-                    ),SizedBox(height: Get.height * 0.04),
+                    //   ),
+                    // ),SizedBox(height: Get.height * 0.04),
 
                     Obx(
                       () => AnimatedOpacity(
-                        opacity: controller.userLogin.value ? 1 : 1,
+                        opacity: controller.userLogin.value ? 1 : 0,
                         duration: Duration(milliseconds: 300),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -235,7 +235,7 @@ class UserloginView extends GetView<UserloginController> {
                     SizedBox(height: Get.height * 0.02),
                     Obx(
                       () => AnimatedOpacity(
-                        opacity: controller.userLogin.value ? 1 : 1,
+                        opacity: controller.userLogin.value ? 1 : 0,
                         duration: Duration(milliseconds: 300),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -317,10 +317,10 @@ class UserloginView extends GetView<UserloginController> {
               () => AnimatedPositioned(
                 duration: Duration(milliseconds: 300),
                 top: controller.userLogin.value
-                    ? Get.height * .5
-                    : Get.height * 0.5,
+                    ? Get.height * .8
+                    : Get.height * 0.45,
                 child: AnimatedOpacity(
-                  opacity: !controller.userLogin.value ? 1 : 1,
+                  opacity: !controller.userLogin.value ? 1 : 0,
                   duration: Duration(milliseconds: 300),
                   child: SizedBox(
                     width: Get.width,
@@ -332,27 +332,11 @@ class UserloginView extends GetView<UserloginController> {
                           height: Get.height * 0.05,
                           child: ElevatedButton(
                             onPressed: controller.login,
-                            child: RichText(
-                              textAlign: TextAlign.center,
-                              text: TextSpan(
-                                text:
-                                    'Userlogin', // Adds some extra space between the text and underline
-                                style: TextStyle(
-
-                                  fontSize: Get.width * 0.04,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF191B41),
-                                  decoration: TextDecoration
-                                      .underline, // Underline the text
-                                  decorationColor: Color(0xFF191B41),
-                                       // Optional: Set the underline color
-                                  decorationStyle: TextDecorationStyle
-                                      .solid, // Solid underline
-                                  decorationThickness: 1,
-                                  height:
-                                      1.2, // This adjusts the vertical spacing for the underline
-                                ),
-                              ),
+                            child: Text(
+                              'User Login',
+                              style: TextStyle(
+                                  fontSize: Get.width * .05,
+                                  color: Color(0xFF191B41)),
                             ),
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
@@ -373,26 +357,11 @@ class UserloginView extends GetView<UserloginController> {
                             onPressed: () {
                               controller.gotoPartnerLogin();
                             },
-                            child: RichText(
-                              textAlign: TextAlign.center,
-                              text: TextSpan(
-                                text:
-                                    'Partner Login', // Adds some extra space between the text and underline
-                                style: TextStyle(
-                                  fontSize: Get.width * 0.04,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF191B41),
-                                  decoration: TextDecoration
-                                      .underline, // Underline the text
-                                  decorationColor: Color(0xFF191B41),
-                                  // Optional: Set the underline color
-                                  decorationStyle: TextDecorationStyle
-                                      .solid, // Solid underline
-                                  decorationThickness: 1,
-                                  height:
-                                      1.2, // This adjusts the vertical spacing for the underline
-                                ),
-                              ),
+                            child: Text(
+                              'Partner Login',
+                              style: TextStyle(
+                                  fontSize: Get.width * .05,
+                                  color: Color(0xFF191B41)),
                             ),
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
@@ -415,17 +384,17 @@ class UserloginView extends GetView<UserloginController> {
             // Fixed Positioned Banner
             Positioned(
               bottom: 0,
-              left: (Get.width - 300) / 2, // Centering the ad
+              left: (Get.width - 320) / 2, // Centering the ad
               child: AnimatedOpacity(
                 opacity: (MediaQuery.of(context).viewInsets.bottom > 0) ? 0 : 1,
                 duration: Duration(
                     milliseconds:
                         MediaQuery.of(context).viewInsets.bottom > 0 ? 0 : 200),
                 child: AdBanner(
-                    width: 300,
+                    width: 320,
                     height: 250,
                     content:
-                        'https://creatives.reachableads.com/gozayan/300x250',
+                        'https://ad.freeyfi.com/app_slots/welcome.html',
                     adUrl: 'https://google.com'),
               ),
             ),
@@ -434,7 +403,7 @@ class UserloginView extends GetView<UserloginController> {
                 top: Get.height * 0.05,
                 left: Get.width * 0.02,
                 child: AnimatedOpacity(
-                  opacity: controller.userLogin.value ? 0 : 0,
+                  opacity: controller.userLogin.value ? 1 : 0,
                   duration: Duration(milliseconds: 300),
                   child: IconButton(
                     icon: Icon(Icons.arrow_back_ios,

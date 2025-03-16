@@ -20,19 +20,32 @@ class PartnerdashboardView extends GetView<PartnerdashboardController> {
             kToolbarHeight,
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              spacing: Get.width * 0.01,
+            Stack(
               children: [
-                Text('Venu', style: TextStyle(fontSize: Get.width * 0.08)),
-                Text(
-                  'Y-Fi',
-                  style: TextStyle(
-                      fontSize: Get.width * 0.08,
-                      color: Colors.lightGreen,
-                      fontStyle: FontStyle.italic),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: Get.width * 0.01,
+                  children: [
+                    Text('Venu', style: TextStyle(fontSize: Get.width * 0.08)),
+                    Text(
+                      'Y-Fi',
+                      style: TextStyle(
+                          fontSize: Get.width * 0.08,
+                          color: Colors.lightGreen,
+                          fontStyle: FontStyle.italic),
+                    ),
+                    Text('List', style: TextStyle(fontSize: Get.width * 0.08)),
+                 
+                    
+                  ],
                 ),
-                Text('List', style: TextStyle(fontSize: Get.width * 0.08)),
+                Positioned(
+                  right: 10,
+                  child: IconButton(
+                    icon: Icon(Icons.logout, color: Colors.white),
+                    onPressed: controller.logout,
+                  ),
+                ),  
               ],
             ),
               Padding(
@@ -140,7 +153,7 @@ class PartnerdashboardView extends GetView<PartnerdashboardController> {
                           width: 300,
                           height: 250,
                           content:
-                              'https://creatives.reachableads.com/gozayan/300x250',
+                              'https://ad.freeyfi.com/app_slots/venue.html',
                           adUrl: 'https://google.com'),
                     ),
                   ),

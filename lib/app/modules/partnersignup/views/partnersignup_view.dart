@@ -516,7 +516,7 @@ class PartnersignupView extends GetView<PartnersignupController> {
                           width: 320,
                           height: 50,
                           content:
-                              'https://creatives.reachableads.com/gozayan/320x50/2',
+                              'https://ad.freeyfi.com/app_slots/registration.html',
                           adUrl: 'https://google.com'),
                     ),
                   ),

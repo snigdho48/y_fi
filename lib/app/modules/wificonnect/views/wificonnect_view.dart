@@ -307,7 +307,7 @@ class WificonnectView extends GetView<WificonnectController> {
                     width: 300,
                     height: 250,
                     content:
-                        'https://creatives.reachableads.com/gozayan/320x100',
+                        'https://ad.freeyfi.com/app_slots/qr.html',
                     adUrl: 'https://google.com'),
               );
             }
@@ -324,7 +324,7 @@ class WificonnectView extends GetView<WificonnectController> {
                     width: 300,
                     height: 250,
                     content:
-                        'https://creatives.reachableads.com/gozayan/320x50',
+                        'https://ad.freeyfi.com/app_slots/connected.html',
                     adUrl: 'https://google.com'),
               );
             }
@@ -376,10 +376,10 @@ class WificonnectView extends GetView<WificonnectController> {
                           AdBanner(
                               width: Get.width,
                               height: Get.height * .7,
-                              adheight: '250',
-                              adwidth: '300',
+                              adheight: '480',
+                              adwidth: '320',
                               content:
-                                  'https://creatives.reachableads.com/gozayan/300x250',
+                                  'https://ad.freeyfi.com/app_slots/connecting.html',
                               adUrl: 'https://google.com'),
                           Expanded(
                               child: Padding(

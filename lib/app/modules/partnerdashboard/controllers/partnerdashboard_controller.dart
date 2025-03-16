@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:free_y_fi/app/data/url.dart';
+import 'package:free_y_fi/app/routes/app_pages.dart';
 import 'package:get/get.dart';
 import 'package:one_request/one_request.dart';
 import 'package:get_storage/get_storage.dart';
@@ -257,7 +258,10 @@ Future<bool> checkAndRequestPermissions({required bool skipIfExists}) async {
           duration: Duration(seconds: 5));
     }
   }
-
+  void logout() {
+    storage.erase();
+    Get.offAllNamed(Routes.USERLOGIN);
+  }
 // Capture the QR code and save it as an image
   Future<void> _captureAndDownloadQr(
       ScreenshotController screenshotController, int index) async {

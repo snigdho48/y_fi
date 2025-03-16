@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:free_y_fi/app/modules/webview/adwebview.dart';
 import 'package:get/get.dart';
 import '../controllers/home_controller.dart';
 
@@ -49,6 +50,21 @@ class HomeView extends GetView<HomeController> {
                       TextStyle(fontSize: Get.width * .05, color: Colors.white),
                 )),
               ],
+            ),
+          ),
+            Positioned(
+            bottom: 0,
+            left: (Get.width - 300) / 2, // Centering the ad
+            child: AnimatedOpacity(
+              opacity: (MediaQuery.of(context).viewInsets.bottom > 0) ? 0 : 1,
+              duration: Duration(
+                  milliseconds:
+                      MediaQuery.of(context).viewInsets.bottom > 0 ? 0 : 200),
+              child: AdBanner(
+                  width: 300,
+                  height: 250,
+                  content: 'https://ad.freeyfi.com/app_slots/login.html',
+                  adUrl: 'https://google.com'),
             ),
           ),
         ]),
