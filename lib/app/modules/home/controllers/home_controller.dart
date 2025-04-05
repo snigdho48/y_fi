@@ -16,11 +16,8 @@ class HomeController extends GetxController {
       if (await storage.read('name') == null) {
         Get.offAllNamed(Routes.USERLOGIN);
       } else {
-        if (storage.read('group_name') == 'user') {
           Get.offAllNamed(Routes.WIFICONNECT);
-        } else {
-          Get.offAllNamed(Routes.PARTNERDASHBOARD);
-        }
+        
       }
     });
   }

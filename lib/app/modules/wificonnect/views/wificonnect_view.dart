@@ -13,7 +13,7 @@ class WificonnectView extends GetView<WificonnectController> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(
-            MediaQuery.of(context).padding.top), // Custom height
+            MediaQuery.of(context).padding.top), 
         child: SizedBox(
           height: kToolbarHeight + MediaQuery.of(context).padding.top,
           child: Row(
@@ -131,7 +131,7 @@ class WificonnectView extends GetView<WificonnectController> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(
-                                      '${(controller.remainingTime.value ~/ 3600).toString().padLeft(2, '0')}',
+                                      (controller.remainingTime.value ~/ 3600).toString().padLeft(2, '0'),
                                       style: TextStyle(
                                           fontSize: Get.width * .08,
                                           fontWeight: FontWeight.bold,
@@ -145,7 +145,7 @@ class WificonnectView extends GetView<WificonnectController> {
                                           color: Colors.lightGreenAccent),
                                     ),
                                     Text(
-                                      '${((controller.remainingTime.value % 3600) ~/ 60).toString().padLeft(2, '0')}',
+                                      ((controller.remainingTime.value % 3600) ~/ 60).toString().padLeft(2, '0'),
                                       style: TextStyle(
                                           fontSize: Get.width * .08,
                                           fontWeight: FontWeight.bold,
@@ -159,7 +159,7 @@ class WificonnectView extends GetView<WificonnectController> {
                                           color: Colors.lightGreenAccent),
                                     ),
                                     Text(
-                                      '${(controller.remainingTime.value % 60).toString().padLeft(2, '0')}',
+                                      (controller.remainingTime.value % 60).toString().padLeft(2, '0'),
                                       style: TextStyle(
                                           fontSize: Get.width * .08,
                                           fontWeight: FontWeight.bold,
@@ -292,6 +292,42 @@ class WificonnectView extends GetView<WificonnectController> {
                               ],
                             ));
                       }),
+                      SizedBox(height: Get.height * .02),
+                       Obx(() {
+                        if (controller.venu.value.isEmpty || !controller.isRun.value) {
+                          return const SizedBox.shrink();
+                        }
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          spacing: 5,
+                          children: [
+                             InkWell(
+                              onTap:controller.rescan,
+                               child: RichText(
+                                  text: TextSpan(
+                                text: controller.isRun.value
+                                    ? "Re Scan"
+                                    : "",
+                                style: TextStyle(
+                                  fontSize: Get.width * .05,
+                                  color: Colors.lightGreenAccent,
+                                  fontWeight: FontWeight.bold,
+                                  decoration: TextDecoration
+                                      .underline, // Underline the text
+                                  decorationColor: Colors
+                                      .lightGreenAccent, // Optional: Set the underline color
+                                  decorationStyle: TextDecorationStyle
+                                      .solid, // Solid underline
+                                  decorationThickness: 1,
+                                  height: 1.3,
+                                ),
+                                                           )),
+                             ),
+                            
+                         ],
+                        );
+                      }),
                     ],
                   ),
                 ),
@@ -300,14 +336,17 @@ class WificonnectView extends GetView<WificonnectController> {
           ),
           Obx(() {
             if (!controller.isConnected.value) {
+              controller.connectedonce.value =true;
               return Positioned(
-                bottom: 0,
+                bottom: 5,
                 left: (Get.width - 300) / 2,
                 child: AdBanner(
                     width: 300,
                     height: 250,
                     content:
-                        'https://ad.freeyfi.com/app_slots/qr.html',
+                        controller.connectedonce.value
+                        ? 'https://ad.freeyfi.com/app_slots/session.html'
+                        : 'https://ad.freeyfi.com/app_slots/qr.html',
                     adUrl: 'https://google.com'),
               );
             }
@@ -318,13 +357,13 @@ class WificonnectView extends GetView<WificonnectController> {
           Obx(() {
             if (controller.isConnected.value) {
               return Positioned(
-                bottom: 0,
+                bottom: 5,
                 left: (Get.width - 300) / 2,
                 child: AdBanner(
                     width: 300,
                     height: 250,
                     content:
-                        'https://ad.freeyfi.com/app_slots/connected.html',
+                       'https://ad.freeyfi.com/app_slots/connected.html',
                     adUrl: 'https://google.com'),
               );
             }
@@ -375,9 +414,9 @@ class WificonnectView extends GetView<WificonnectController> {
                           SizedBox(height: Get.height * .03),
                           AdBanner(
                               width: Get.width,
-                              height: Get.height * .7,
-                              adheight: '480',
-                              adwidth: '320',
+                              height: (700/1024) * Get.height,
+                              scale:  700/Get.width*.92,
+                         
                               content:
                                   'https://ad.freeyfi.com/app_slots/connecting.html',
                               adUrl: 'https://google.com'),

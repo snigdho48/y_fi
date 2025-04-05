@@ -1,5 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:free_y_fi/app/modules/wificonnect/views/wificonnect_view.dart';
+import 'package:free_y_fi/app/routes/app_pages.dart';
 import 'package:get/get.dart';
 
 // Initialize notifications
@@ -27,13 +28,19 @@ Future<void> initializeNotifications() async {
 // Notification response when tapped (foreground)
 Future<void> onDidReceiveNotificationResponse(
     NotificationResponse response) async {
-  Get.offAll(WificonnectView());
+  Get.to(
+    () => WificonnectView(), // Navigate to WificonnectView
+    arguments: response.payload, // Pass the payload data if needed
+  );
 }
 
 // Notification response when tapped (background)
 Future<void> onDidReceiveBackgroundNotificationResponse(
     NotificationResponse response) async {
-  Get.offAll(WificonnectView());
+  Get.to(
+    () => WificonnectView(), // Navigate to WificonnectView
+    arguments: response.payload, // Pass the payload data if needed
+  ); // Navigate to WificonnectView
 }
 
 // Show a notification

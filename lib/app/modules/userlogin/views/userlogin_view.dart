@@ -133,7 +133,7 @@ class UserloginView extends GetView<UserloginController> {
 
                     Obx(
                       () => AnimatedOpacity(
-                        opacity: controller.userLogin.value ? 1 : 0,
+                        opacity: controller.userLogin.value ? 1 : 1,
                         duration: Duration(milliseconds: 300),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -235,7 +235,7 @@ class UserloginView extends GetView<UserloginController> {
                     SizedBox(height: Get.height * 0.02),
                     Obx(
                       () => AnimatedOpacity(
-                        opacity: controller.userLogin.value ? 1 : 0,
+                        opacity: controller.userLogin.value ? 1 : 1,
                         duration: Duration(milliseconds: 300),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -313,77 +313,77 @@ class UserloginView extends GetView<UserloginController> {
                 ),
               ),
             ),
-            Obx(
-              () => AnimatedPositioned(
-                duration: Duration(milliseconds: 300),
-                top: controller.userLogin.value
-                    ? Get.height * .8
-                    : Get.height * 0.45,
-                child: AnimatedOpacity(
-                  opacity: !controller.userLogin.value ? 1 : 0,
-                  duration: Duration(milliseconds: 300),
-                  child: SizedBox(
-                    width: Get.width,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        SizedBox(
-                          width: Get.width * 0.37,
-                          height: Get.height * 0.05,
-                          child: ElevatedButton(
-                            onPressed: controller.login,
-                            child: Text(
-                              'User Login',
-                              style: TextStyle(
-                                  fontSize: Get.width * .05,
-                                  color: Color(0xFF191B41)),
-                            ),
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                Colors.lightGreenAccent,
-                              ),
-                              shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(40),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: Get.width * 0.37,
-                          height: Get.height * 0.05,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              controller.gotoPartnerLogin();
-                            },
-                            child: Text(
-                              'Partner Login',
-                              style: TextStyle(
-                                  fontSize: Get.width * .05,
-                                  color: Color(0xFF191B41)),
-                            ),
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                Colors.lightGreenAccent,
-                              ),
-                              shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(40),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            // Obx(
+            //   () => AnimatedPositioned(
+            //     duration: Duration(milliseconds: 300),
+            //     top: controller.userLogin.value
+            //         ? Get.height * .8
+            //         : Get.height * 0.45,
+            //     child: AnimatedOpacity(
+            //       opacity: !controller.userLogin.value ? 1 : 0,
+            //       duration: Duration(milliseconds: 300),
+            //       child: SizedBox(
+            //         width: Get.width,
+            //         child: Row(
+            //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //           children: [
+            //             SizedBox(
+            //               width: Get.width * 0.37,
+            //               height: Get.height * 0.05,
+            //               child: ElevatedButton(
+            //                 onPressed: controller.login,
+            //                 child: Text(
+            //                   'User Login',
+            //                   style: TextStyle(
+            //                       fontSize: Get.width * .05,
+            //                       color: Color(0xFF191B41)),
+            //                 ),
+            //                 style: ButtonStyle(
+            //                   backgroundColor: MaterialStateProperty.all(
+            //                     Colors.lightGreenAccent,
+            //                   ),
+            //                   shape: MaterialStateProperty.all(
+            //                     RoundedRectangleBorder(
+            //                       borderRadius: BorderRadius.circular(40),
+            //                     ),
+            //                   ),
+            //                 ),
+            //               ),
+            //             ),
+            //             SizedBox(
+            //               width: Get.width * 0.37,
+            //               height: Get.height * 0.05,
+            //               child: ElevatedButton(
+            //                 onPressed: () {
+            //                   controller.gotoPartnerLogin();
+            //                 },
+            //                 child: Text(
+            //                   'Partner Login',
+            //                   style: TextStyle(
+            //                       fontSize: Get.width * .05,
+            //                       color: Color(0xFF191B41)),
+            //                 ),
+            //                 style: ButtonStyle(
+            //                   backgroundColor: MaterialStateProperty.all(
+            //                     Colors.lightGreenAccent,
+            //                   ),
+            //                   shape: MaterialStateProperty.all(
+            //                     RoundedRectangleBorder(
+            //                       borderRadius: BorderRadius.circular(40),
+            //                     ),
+            //                   ),
+            //                 ),
+            //               ),
+            //             ),
+            //           ],
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
             // Fixed Positioned Banner
             Positioned(
-              bottom: 0,
+              bottom: 5,
               left: (Get.width - 320) / 2, // Centering the ad
               child: AnimatedOpacity(
                 opacity: (MediaQuery.of(context).viewInsets.bottom > 0) ? 0 : 1,
@@ -403,7 +403,7 @@ class UserloginView extends GetView<UserloginController> {
                 top: Get.height * 0.05,
                 left: Get.width * 0.02,
                 child: AnimatedOpacity(
-                  opacity: controller.userLogin.value ? 1 : 0,
+                  opacity: controller.userLogin.value ? 0 : 0,
                   duration: Duration(milliseconds: 300),
                   child: IconButton(
                     icon: Icon(Icons.arrow_back_ios,

@@ -53,7 +53,7 @@ class HomeView extends GetView<HomeController> {
             ),
           ),
             Positioned(
-            bottom: 0,
+            bottom: 5,
             left: (Get.width - 300) / 2, // Centering the ad
             child: AnimatedOpacity(
               opacity: (MediaQuery.of(context).viewInsets.bottom > 0) ? 0 : 1,

@@ -72,9 +72,9 @@ class UserloginController extends GetxController {
     Get.offAllNamed(Routes.WIFICONNECT);
   }
 
-  void gotoPartnerLogin() {
-    Get.toNamed(Routes.PARTNERLOGIN);
-  }
+  // void gotoPartnerLogin() {
+  //   Get.toNamed(Routes.PARTNERLOGIN);
+  // }
 
   void login() {
     // final text = emailController.value.text;

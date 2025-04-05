@@ -12,11 +12,12 @@ import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 import 'package:get_storage/get_storage.dart';
 
 class WificonnectController extends GetxController {
+  RxBool connectedonce  = false.obs;
   RxBool isConnected = false.obs;
   final request = oneRequest();
   RxBool isConnecting = false.obs;
   RxInt remainingTime = 0.obs;
-  final disconnectTime = 30 * 60;
+  final disconnectTime = 30 *60;
   Timer? disconnectTimer;
   RxBool isRun = false.obs;
   Timer? loadingtimer;
@@ -41,6 +42,27 @@ class WificonnectController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    print(localStorage.read('connected'));
+    print(localStorage.read('connectiontime'));
+
+    // if (localStorage.read('connectiontime') != null &&
+    //     localStorage.read('connectiontime') != '') {
+    //   remainingTime.value = DateTime.now()
+    //       .difference(DateTime.parse(localStorage.read('connectiontime')))
+    //       .inSeconds;
+    //   if (remainingTime.value <= 0) {
+    //     isConnected.value = false;
+    //     isRun.value = true; 
+    //     disconnectWiFi();
+    //   }else{
+    //     isConnected.value = true;
+    //     isRun.value = false;
+    //     disconnectTimer?.cancel();
+    //   }
+    //   remainingTime.value = disconnectTime;
+    // }
+     
+    
     requestPermissions();
     monitorWiFiStatus();
   }
@@ -165,6 +187,7 @@ class WificonnectController extends GetxController {
 
   /// Connects to a Wi-Fi network
   Future<void> connectToWiFi() async {
+     
     isConnected.value = false;
     remainingTime.value = disconnectTime;
     // ✅ Ensure Location Services Are Enabled
@@ -259,7 +282,7 @@ class WificonnectController extends GetxController {
       withInternet: true,
     );
     if (!connectionStarted) {
-      await Future.delayed(Duration(seconds: 2), () async {
+      await Future.delayed(Duration(seconds: 1), () async {
         connectionStarted = await WiFiForIoTPlugin.connect(
           ssid,
           password: password,
@@ -270,13 +293,15 @@ class WificonnectController extends GetxController {
     }
     if (connectionStarted) {
       print("✅ WiFi connection started");
+     
       localStorage.write('venu', venu.value);
       localStorage.write('ssid', ssid);
       localStorage.write('password', password);
 
       isConnectedViaApp.value = true;
       isConnecting.value = false;
-
+      localStorage.write('isFirstTime', false);
+      isFirstTime.value = false;
       startDisconnectTimer();
       Get.snackbar(
           backgroundColor: Colors.black.withOpacity(0.5),
@@ -291,14 +316,12 @@ class WificonnectController extends GetxController {
             style: TextStyle(color: Colors.green),
           ));
 
-      try {
-        showNotification("Wi-Fi Connected", "You have been connected to $ssid");
-      } catch (e) {
-        print(e);
-      }
+     
     } else {
       isConnecting.value = false;
       isConnected.value = false;
+
+      rescan();
       Get.snackbar(
           backgroundColor: Colors.black.withOpacity(0.5),
           "Error",
@@ -318,6 +341,9 @@ class WificonnectController extends GetxController {
   /// Starts countdown timer for disconnecting WiFi
   void startDisconnectTimer() async {
     disconnectTimer?.cancel();
+     localStorage.write('connected', true);
+    localStorage.write('connectiontime', DateTime.now().toString());
+   
     getDeviceInfo().then((value) {
       if (connectFirstTime.value) {
         ip.value = value['ip'] ?? '';
@@ -346,6 +372,12 @@ class WificonnectController extends GetxController {
     });
 
     isConnected.value = true;
+      try {
+      showNotification("Wi-Fi Connected",
+          "You have been connected to ${ssidController.text}.");
+    } catch (e) {
+      print(e);
+    }
     disconnectTimer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (remainingTime.value > 0) {
         remainingTime.value--;
@@ -359,37 +391,37 @@ class WificonnectController extends GetxController {
   }
 
   void startloadingTimer() async {
-    if (localStorage.read('isFirstTime') == null) {
-      localStorage.write('isFirstTime', false);
-      isFirstTime.value = false;
-      await WiFiForIoTPlugin.connect(
-        ssidController.text.trim(),
-        password: passwordController.text.trim(),
-        security: NetworkSecurity.WPA,
-        withInternet: true,
-      );
-    } else {
-      isFirstTime.value = localStorage.read('isFirstTime');
-    }
+   
 
     isRun.value = false;
     loadingtimer?.cancel();
     loadingCount.value = 30;
     isLoading.value = true;
+    bool started= false;
 
     loadingtimer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (loadingCount.value > 0) {
         loadingCount.value--;
-      } else {
+         if (loadingCount.value < 7&& !started) {
+          started = true;
+          print("Starting connection");
+          connectToWiFi();
+        } 
+      }
+      else {
         timer.cancel();
         isLoading.value = false;
-        connectToWiFi();
+        
       }
+     
     });
+  
   }
 
   Future<void> disconnectFromWiFi() async {
     bool disconnected = await WiFiForIoTPlugin.disconnect();
+     localStorage.write('connected', false);
+    localStorage.write('connectiontime', '');
     await Future.delayed(Duration(seconds: 2));
     if (disconnected) {
       print("✅ WiFi successfully disconnected");
@@ -401,6 +433,7 @@ class WificonnectController extends GetxController {
   /// Disconnects from Wi-Fi network
   Future<void> disconnectWiFi() async {
     try {
+      
       if (await WiFiForIoTPlugin.isConnected()) {
         bool isDisconnected = await WiFiForIoTPlugin.disconnect();
         print("WiFi disconnected: $isDisconnected");
@@ -414,7 +447,8 @@ class WificonnectController extends GetxController {
           "You have been disconnected from the Wi-Fi network.");
 
       remainingTime.value = 0;
-
+      localStorage.write('connected', false);
+      localStorage.write('connectiontime', '');
       isConnecting.value = false;
       isConnectedViaApp.value = false;
       isConnected.value = false;
@@ -449,6 +483,27 @@ class WificonnectController extends GetxController {
     }
   }
 
+  void rescan() {
+      remainingTime.value = 0;
+    venu.value = '';
+    venuuuid.value = 0;
+    ssidController.text = '';
+    passwordController.text = '';
+    localStorage.remove('ssid');
+    localStorage.remove('password');
+    localStorage.remove('venu');
+    localStorage.remove('connected');
+    isConnecting.value = false;
+    isConnectedViaApp.value = false;
+    connectFirstTime.value = true;
+    isConnected.value = false;
+    isRun.value = false;
+    disconnectTimer?.cancel();
+    qrCodeResult.value = '';
+    localStorage.write('connected', false);
+    controller?.resumeCamera();
+  }
+
   Future<void> disconnectWiFi2() async {
     try {
       if (await WiFiForIoTPlugin.isConnected()) {
@@ -472,7 +527,8 @@ class WificonnectController extends GetxController {
         }
       }
       qrCodeResult.value = '';
-
+      localStorage.write('connected', false);
+      localStorage.write('connectiontime', '');
       isConnected.value = false;
       isConnectedViaApp.value = false;
       disconnectTimer?.cancel();
@@ -523,6 +579,7 @@ class WificonnectController extends GetxController {
       print("QR Code Result: ${scanData.code?.split('?code=')}");
 
       if (!(scanData.code?.contains('?code=') ?? false)) {
+   
         return;
       }
       final finaldata = scanData.code?.split('?code=').last ?? '';
@@ -553,6 +610,7 @@ class WificonnectController extends GetxController {
               backgroundColor: Colors.black.withOpacity(0.5),
               colorText: Colors.red,
               duration: Duration(seconds: 15));
+                        rescan();
         });
       }
     });

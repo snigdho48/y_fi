@@ -9,6 +9,7 @@ class AdBanner extends StatelessWidget {
   final String adUrl;
   final String? adheight;
   final String? adwidth;
+  final double? scale;
 
   AdBanner({
     required this.width,
@@ -17,6 +18,7 @@ class AdBanner extends StatelessWidget {
     required this.adUrl,
     this.adheight,
     this.adwidth,
+    this.scale,
   });
 
   @override
@@ -67,7 +69,7 @@ class AdBanner extends StatelessWidget {
                 position: absolute; top: 0; left: 0; width: 100%; height: 100%;
                 background: rgba(0, 0, 0, 0); z-index: 2; cursor: pointer;
               }
-              iframe {width: ${adwidth ?? width}px; height: ${adheight ?? height}px;  border: none; position: relative; z-index: 1; }
+              iframe {width: ${adwidth ?? width}px; height: ${adheight ?? height}px;  border: none; position: relative; z-index: 1;scale:${scale ?? 1}; transform-origin: 0 0; }
             </style>
             <script>
               function openAd() {
