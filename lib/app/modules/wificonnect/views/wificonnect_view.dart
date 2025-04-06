@@ -226,7 +226,7 @@ class WificonnectView extends GetView<WificonnectController> {
                         }
                         return ElevatedButton(
                             onPressed: controller.isConnected.value
-                                ? controller.disconnectWiFi2
+                                ? controller.disconnectWiFi
                                 : controller.startloadingTimer,
                             style: ElevatedButton.styleFrom(
                               minimumSize: Size(Get.width * .5, 60),

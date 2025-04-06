@@ -341,6 +341,7 @@ class WificonnectController extends GetxController {
   /// Starts countdown timer for disconnecting WiFi
   void startDisconnectTimer() async {
     disconnectTimer?.cancel();
+    await WiFiForIoTPlugin.forceWifiUsage(true);
      localStorage.write('connected', true);
     localStorage.write('connectiontime', DateTime.now().toString());
    
@@ -391,8 +392,15 @@ class WificonnectController extends GetxController {
   }
 
   void startloadingTimer() async {
-   
-
+    if(localStorage.read('isFirstTime')==null){
+      localStorage.write('isFirstTime', true);
+       WiFiForIoTPlugin.connect(ssidController.text,
+        password: passwordController.text,
+        security: NetworkSecurity.WPA,
+        withInternet: true,
+      );
+      Future.delayed(Duration(seconds: 2), WiFiForIoTPlugin.disconnect);
+    }
     isRun.value = false;
     loadingtimer?.cancel();
     loadingCount.value = 30;
@@ -402,9 +410,10 @@ class WificonnectController extends GetxController {
     loadingtimer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (loadingCount.value > 0) {
         loadingCount.value--;
-         if (loadingCount.value < 7&& !started) {
+         if (loadingCount.value < 2&& !started) {
           started = true;
           print("Starting connection");
+          
           connectToWiFi();
         } 
       }
@@ -447,6 +456,13 @@ class WificonnectController extends GetxController {
           "You have been disconnected from the Wi-Fi network.");
 
       remainingTime.value = 0;
+      venu.value = '';
+      ssidController.text = '';
+      passwordController.text = '';
+      localStorage.remove('ssid');
+      localStorage.remove('password');
+      localStorage.remove('venu');
+
       localStorage.write('connected', false);
       localStorage.write('connectiontime', '');
       isConnecting.value = false;
@@ -484,6 +500,7 @@ class WificonnectController extends GetxController {
   }
 
   void rescan() {
+        qrCodeResult.value = '';
       remainingTime.value = 0;
     venu.value = '';
     venuuuid.value = 0;
@@ -499,8 +516,9 @@ class WificonnectController extends GetxController {
     isConnected.value = false;
     isRun.value = false;
     disconnectTimer?.cancel();
-    qrCodeResult.value = '';
+
     localStorage.write('connected', false);
+   
     controller?.resumeCamera();
   }
 
@@ -528,7 +546,7 @@ class WificonnectController extends GetxController {
       }
       qrCodeResult.value = '';
       localStorage.write('connected', false);
-      localStorage.write('connectiontime', '');
+      localStorage.remove('connectiontime');
       isConnected.value = false;
       isConnectedViaApp.value = false;
       disconnectTimer?.cancel();
@@ -570,7 +588,6 @@ class WificonnectController extends GetxController {
 
   void stopScanning() {
     controller?.pauseCamera();
-    controller?.stopCamera();
   }
 
   void onQRViewCreated(QRViewController qrController) {
@@ -579,7 +596,7 @@ class WificonnectController extends GetxController {
       print("QR Code Result: ${scanData.code?.split('?code=')}");
 
       if (!(scanData.code?.contains('?code=') ?? false)) {
-   
+      
         return;
       }
       final finaldata = scanData.code?.split('?code=').last ?? '';
@@ -587,36 +604,48 @@ class WificonnectController extends GetxController {
       if (qrCodeResult.value.isEmpty) {
         return;
       }
-      result.value = scanData;
+      
       if (qrCodeResult.isNotEmpty) {
+        result.value = scanData;
         stopScanning();
         print("QR Code Result: ${qrCodeResult.value}");
+        
         var response = await request.send(
             url: '${baseurl}venue/data/',
             method: RequestType.POST,
             body: {'code': qrCodeResult.value},
             resultOverlay: false,
-            header: {'Authorization': 'Bearer ${localStorage.read('token')}'});
+            header: {'Authorization': 'Bearer ${ localStorage.read('token')}'});
+         
 
         response.fold((data) {
-          print(data);
+          print('Data: $data');
           ssidController.text = data['ssid']!;
           passwordController.text = data['password']!;
           venu.value = data['venue_name']!;
           venuuuid.value = data['id']!;
         }, (er) {
+              rescan();
+          print("Error: ${er}");
           Get.snackbar("Error", "Error: $er",
               snackPosition: SnackPosition.BOTTOM,
               backgroundColor: Colors.black.withOpacity(0.5),
               colorText: Colors.red,
               duration: Duration(seconds: 15));
-                        rescan();
+                    
         });
+        
       }
     });
   }
 
   void signOut() async {
+        await localStorage.remove('ssid');
+    await localStorage.remove('password');
+    await localStorage.remove('name');
+    await localStorage.remove('email');
+    await localStorage.remove('phone');
+    await localStorage.remove('venu');
     try {
       await disconnectFromWiFi();
     } catch (e) {
@@ -627,12 +656,7 @@ class WificonnectController extends GetxController {
     } catch (e) {
       print(e);
     }
-    await localStorage.remove('ssid');
-    await localStorage.remove('password');
-    await localStorage.remove('name');
-    await localStorage.remove('email');
-    await localStorage.remove('phone');
-    await localStorage.remove('venu');
+
     Get.offAllNamed('/home');
   }
 

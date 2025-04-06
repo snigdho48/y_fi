@@ -7,10 +7,10 @@ import 'package:get_storage/get_storage.dart';
 class HomeController extends GetxController {
   final storage = GetStorage();
   @override
-  void onInit() {
+  void onInit()async {
     super.onInit();
 
-    Future.delayed(Duration(seconds: 5), () async {
+    await Future.delayed(Duration(seconds: 5), () async {
       print("Stored name: ${storage.read('name')}");
 
       if (await storage.read('name') == null) {

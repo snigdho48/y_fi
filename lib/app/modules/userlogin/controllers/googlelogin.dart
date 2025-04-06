@@ -17,9 +17,9 @@ class GoogleloginController extends GetxController {
     super.onInit();
   }
 
-  Future<UserCredential> signInWithGoogle() async {
+  Future<UserCredential?> signInWithGoogle() async {
     // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+   try{ final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
     // Obtain the auth details from the request
     final GoogleSignInAuthentication? googleAuth =
@@ -32,14 +32,20 @@ class GoogleloginController extends GetxController {
     );
 
     // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+    return await FirebaseAuth.instance.signInWithCredential(credential);}
+    catch (e) {
+      print("Error signing in with Google: $e");
+      return null;
+    }
   }
 
   Future<void> signInGoogle() async {
     oneRequest.loading();
     final result = await signInWithGoogle();
-    print("Result: ${result.user}");
-    if (result.user != null) {
+  
+    
+    print("Result: ${result?.user}");
+    if (result != null && result.user != null) {
       if (storage.read('deviceid') == null) {
         final result = await getDeviceInfo();
         storage.write('deviceid', result['device_id']);
@@ -79,19 +85,20 @@ class GoogleloginController extends GetxController {
         Get.offAllNamed(Routes.WIFICONNECT);
       }, (er) {
         print("Error: ${er}");
-
         Get.snackbar("Error", "Error: $er",
-            snackPosition: SnackPosition.BOTTOM,
+            snackPosition: SnackPosition.TOP,
             backgroundColor: Colors.black.withOpacity(0.5),
             colorText: Colors.red,
             duration: Duration(seconds: 15));
       });
       return;
     } else {
+              oneRequest.dismissLoading;
+
       Get.snackbar(
         "Error",
         "Google login failed",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.black.withOpacity(0.5),
         colorText: Colors.red,
       );
