@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:free_y_fi/app/data/url.dart';
 import 'package:free_y_fi/app/modules/notifications/notifications.dart';
+import 'package:free_y_fi/app/services/connectivity.dart';
 import 'package:free_y_fi/app/services/device_info.dart';
 import 'package:get/get.dart';
 import 'package:one_request/one_request.dart';
@@ -14,7 +15,7 @@ import 'package:get_storage/get_storage.dart';
 class WificonnectController extends GetxController {
   RxBool connectedonce  = false.obs;
   RxBool isConnected = false.obs;
-  final request = oneRequest();
+  oneRequest request = oneRequest();
   RxBool isConnecting = false.obs;
   RxInt remainingTime = 0.obs;
   final disconnectTime = 30 *60;
@@ -609,13 +610,30 @@ class WificonnectController extends GetxController {
         result.value = scanData;
         stopScanning();
         print("QR Code Result: ${qrCodeResult.value}");
-        
+        final token = localStorage.read('token');
+        if (token == null) {
+          print("Token is null");
+                        rescan();
+
+          return;
+        }
+        if(await hasInternet() == false){
+                        rescan();
+
+          Get.snackbar("Error", "No Internet Connection",
+              snackPosition: SnackPosition.TOP,
+              backgroundColor: Colors.black.withOpacity(0.5),
+              colorText: Colors.red,
+              duration: Duration(seconds: 15));
+          return;
+          
+        }
         var response = await request.send(
             url: '${baseurl}venue/data/',
             method: RequestType.POST,
             body: {'code': qrCodeResult.value},
             resultOverlay: false,
-            header: {'Authorization': 'Bearer ${ localStorage.read('token')}'});
+            header: {'Authorization': 'Bearer $token'});
          
 
         response.fold((data) {
@@ -627,7 +645,7 @@ class WificonnectController extends GetxController {
         }, (er) {
               rescan();
           print("Error: ${er}");
-          Get.snackbar("Error", "Error: $er",
+          Get.snackbar("Error", "Error: Could not Get WiFi Info",
               snackPosition: SnackPosition.BOTTOM,
               backgroundColor: Colors.black.withOpacity(0.5),
               colorText: Colors.red,
